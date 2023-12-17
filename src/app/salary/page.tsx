@@ -11,9 +11,9 @@ const taxSlab = [
 ];
 
 const taxCodeSalary = [
-  { id: 1, status: 'Government', code: '00010101' },
-  { id: 2, status: 'Corporate', code: '00020102'  },
-  { id: 3, status : 'Other', code: '00030103' },
+  { id: 1, status: 'Government', section: '149(1)', code: '00010101' },
+  { id: 2, status: 'Corporate', section: '149(2)', code: '00020102'  },
+  { id: 3, status : 'Others', section: '149(3)', code: '00030103' },
 ]
 
 const Salary = () => {
@@ -24,13 +24,14 @@ const Salary = () => {
   const [result, setResult] = useState<{ id?: number, min?: number, max?: number, 
         fixTax?: number; taxRate?: number }>({});
   const [totalTax, setTotalTax] = useState<{fixedTax: number, varTax: number}>({fixedTax: 0, varTax: 0});
-
+  const [taxCode, setTaxCode] = useState<{id?: number, status?: string, section?: string, code?: string}>({});
   
-  const taxCalc = (salary: number) => {
+  const taxCalc = (salary: number, selectedEmploymentStatus: string) => {
     let annualSal = salary * 12;
     let result: {id?: number, min?: number, max?: number, 
                 fixTax?: number; taxRate?: number } = {};
     let tax : {fixedTax: number; varTax: number};
+    let taxCode: {id?: number, status?: string, section: string , code?: string};
 
     for (const slab of taxSlab) {
       if (annualSal >= slab.min && annualSal <= slab.max) {
@@ -40,25 +41,36 @@ const Salary = () => {
         break;
       }
     }
+    setResult(result);
+
+    for(const code of taxCodeSalary){
+      if(selectedEmploymentStatus === code.status){
+        taxCode = {id: code.id, status: code.status, section: code.section , code: code.code,};
+        break;
+      }
+    }
+    setTaxCode(taxCode)
 
     tax = {fixedTax: result.fixTax || 0,
       varTax: parseInt(((annualSal - (result.min || 0)) * (result.taxRate || 0)).toFixed(0))
     };
     setAnnualSal(annualSal);
-    setResult(result);
+    
     setTotalTax(tax)
+    
+    console.log(taxCode.status, taxCode.code)
 
   };
 
-  const handleClick = (salary: number) => {
-    if (salary <= 0 || !selectedEmploymentStatus) {
+  const handleClick = (salary: number, selectedEmploymentStatus: string) => {
+    if (salary <= 0 || !selectedEmploymentStatus || selectedEmploymentStatus === 'Select') {
       console.log(salary, selectedEmploymentStatus);
       alert("Please enter a valid salary and select an employment status");
       return;
     }
-    
+    // console.log(selectedEmploymentStatus)
     // Call your tax calculation function
-    taxCalc(salary);
+    taxCalc(salary, selectedEmploymentStatus);
   };
 
 
@@ -91,8 +103,8 @@ const Salary = () => {
           pattern="[0-9]*"
           onChange={(e) => setSalary(parseInt(e.target.value))}
           />
-        <button onClick={() => handleClick(salary)}>Calculate</button>
         </div>
+        <button onClick={() => handleClick(salary, selectedEmploymentStatus)}>Calculate</button>
 
 
         <div className='flex '>
@@ -103,6 +115,10 @@ const Salary = () => {
               <p>Variable Tax: </p>
               <p>Total Tax: </p>
               <p>Monthly Deduction : </p>
+              <p>_________________________</p>
+              <p>Employment Status</p>
+              <p>Payment Section</p>
+              <p>Tax Code</p>
 
           </div>
           <div className='text-right w-36'>
@@ -112,7 +128,10 @@ const Salary = () => {
               <p> {totalTax.varTax.toLocaleString()}</p>
               <p> {(totalTax.fixedTax + totalTax.varTax).toLocaleString()}</p>
               <p> {(((totalTax.fixedTax + totalTax.varTax) / 12).toFixed(0)).toLocaleString()}</p>
-
+              <p>___________________</p>
+              <p> {taxCode.status} </p>
+              <p> {taxCode.section} </p>
+              <p> {taxCode.code} </p>
           </div>
         </div>
         </div>
