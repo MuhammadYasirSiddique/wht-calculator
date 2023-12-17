@@ -1,12 +1,12 @@
-
 import UnderDevelopment from '@/components/underdevelopment';
-import React from 'react';
+import React from 'react'
 
-const Home = () => {
+const NonSalary = () => {
   return (
-   
+ 
     <UnderDevelopment />
   );
-};
 
-export default Home;
+}
+
+export default NonSalary
