@@ -23,7 +23,7 @@ export default function Navbar() {
   return (
     <div>
       
-      <nav className="w-full bg-slate-200 text-black shadow-lg">
+      <nav className="w-full bg-zinc-200 text-gray-600 hover:text-black shadow-lg">
         <div className="justify-between px-4 mx-auto lg:max-w-7xl md:items-center md:flex md:px-8">
           <div>
             <div className="flex items-center justify-between py-3 md:py-5 md:block">
@@ -74,18 +74,18 @@ export default function Navbar() {
                 navbar ? 'block' : 'hidden'
               }`}
             >
-              <ul className="items-center justify-center space-y-8 md:flex md:space-x-6 md:space-y-0">
-                <li className={activeLink === '/' ? 'text-blue-500' : ''}>
+              <ul className="items-center justify-center text-gray-600 hover:text-black space-y-8 md:flex md:space-x-6 md:space-y-0">
+                <li className={activeLink === '/' ? 'text-blue-500 hover:text-blue-700' : ''}>
                   <Link href="/">
                     Home
                   </Link>
                 </li>
-                <li className={activeLink === '/salary' ? 'text-blue-500' : ''}>
+                <li className={activeLink === '/salary' ? 'text-blue-500 hover:text-blue-700  ' : ''}>
                   <Link href="/salary">
                     Salary
                   </Link>
                 </li>
-                <li className={activeLink === '/nonsalary' ? 'text-blue-500' : ''}>
+                <li className={activeLink === '/nonsalary' ? 'text-blue-500 hover:text-blue-700' : ''}>
                   <Link href="/nonsalary">
                     Non-Salary
                   </Link>
