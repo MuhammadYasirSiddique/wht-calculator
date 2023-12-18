@@ -2,11 +2,24 @@
 
 import Head from 'next/head';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import {  usePathname } from 'next/navigation';
+
+
 
 
 export default function Navbar() {
   const [navbar, setNavbar] = useState(false);
+  
+  const [activeLink, setActiveLink] = useState('');
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setActiveLink(pathname);
+  }, [pathname]);
+
+  
+
   return (
     <div>
       
@@ -62,17 +75,17 @@ export default function Navbar() {
               }`}
             >
               <ul className="items-center justify-center space-y-8 md:flex md:space-x-6 md:space-y-0">
-                <li className="">
+                <li className={activeLink === '/' ? 'text-blue-500' : ''}>
                   <Link href="/">
                     Home
                   </Link>
                 </li>
-                <li className="">
+                <li className={activeLink === '/salary' ? 'text-blue-500' : ''}>
                   <Link href="/salary">
                     Salary
                   </Link>
                 </li>
-                <li className="">
+                <li className={activeLink === '/nonsalary' ? 'text-blue-500' : ''}>
                   <Link href="/nonsalary">
                     Non-Salary
                   </Link>
