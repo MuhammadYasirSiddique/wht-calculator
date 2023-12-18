@@ -1,6 +1,31 @@
 'use client'  
 
-import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useState } from 'react';
+import * as React from "react"
+import  { Toaster } from 'react-hot-toast';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+
 
 const taxSlab = [
   { id: 1, min: 0, max: 600000, fixTax: 0, taxRate: 0 },
@@ -15,6 +40,7 @@ const taxCodeSalary = [
   { id: 2, status: 'Corporate', section: '149(2)', code: '00020102'  },
   { id: 3, status : 'Others', section: '149(3)', code: '00030103' },
 ]
+
 
 const Salary = () => {
   const [salary, setSalary] = useState<number>(0);
@@ -63,13 +89,15 @@ const Salary = () => {
   };
 
   const handleClick = (salary: number, selectedEmploymentStatus: string) => {
-    if (salary <= 0 || !selectedEmploymentStatus || selectedEmploymentStatus === 'Select') {
-      console.log(salary, selectedEmploymentStatus);
-      alert("Please enter a valid salary and select an employment status");
+    if (salary <= 0 || !selectedEmploymentStatus ) {
+      
+      toast.error("Please enter a valid salary and select an employment status", {
+        autoClose: 2500,
+      });
       return;
     }
-    // console.log(selectedEmploymentStatus)
-    // Call your tax calculation function
+    console.log(selectedEmploymentStatus)
+    
     taxCalc(salary, selectedEmploymentStatus);
   };
 
@@ -83,57 +111,105 @@ const Salary = () => {
         
         <div>
           
-          <label htmlFor="employmentStatus">Employment Status:</label>
-          <select
-          id="employmentStatus"
-          onChange={(e) => setSelectedEmploymentStatus(e.target.value)}
-        >
-          <option value="Select">--Select--</option>
-          <option value="Government">Government</option>
-          <option value="Corporate">Corporate</option>
-          <option value="Others">Others</option>
-        </select>
+          <Select  
+          
+          onValueChange={(e) => setSelectedEmploymentStatus(e)}
+          >
+            <SelectTrigger className="w-[250px] my-2">
+              <SelectValue placeholder="Employment Status?" />
+            </SelectTrigger>
+            <SelectContent > 
+              <SelectItem value="Government">Government</SelectItem>
+              <SelectItem value="Corporate">Corporate</SelectItem>
+              <SelectItem value="Others">Others</SelectItem>
+            </SelectContent>
+          </Select>
+
+
+
         </div>
+        <div><ToastContainer/></div>
         <div>
 
-          <input
+          <Input           
+          className="border w-[250px]"
           type="text"
-          className="border border-black"
           placeholder='Enter Per Month Salary'
           pattern="[0-9]*"
           onChange={(e) => setSalary(parseInt(e.target.value))}
           />
+         
         </div>
-        <button onClick={() => handleClick(salary, selectedEmploymentStatus)}>Calculate</button>
+        
+        <Button className='mt-2 w-[250px]'
+        onClick={() => handleClick(salary, selectedEmploymentStatus)}
+        >Calculate</Button>
+
+          <div className='mt-5'>
+            <h1 className='text-center text-gray-400'>Witholding Tax Calculation </h1>
+            <Table>
+              {/* <TableCaption>Witholding Tax Calculation</TableCaption> */}
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[300px]">Descripton</TableHead>
+                      
+                      <TableHead className="text-right">Amount</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                <TableBody>
+                    <TableRow>
+                      <TableCell className="font-medium">Annual Income</TableCell>
+                      <TableCell className="text-right">{annualSal.toLocaleString()}</TableCell>
+                     </TableRow>
+                     <TableRow>
+                      <TableCell className="font-medium">Tax Rate:</TableCell>
+                      <TableCell className="text-right">{((result.taxRate || 0) * 100).toLocaleString()}%</TableCell>
+                     </TableRow>
+                     <TableRow>
+                      <TableCell className="font-medium">Fixed Tax</TableCell>
+                      <TableCell className="text-right">{totalTax.fixedTax.toLocaleString()}</TableCell>
+                     </TableRow>
+                     <TableRow>
+                      <TableCell className="font-medium">Variable Tax</TableCell>
+                      <TableCell className="text-right">{totalTax.varTax.toLocaleString()}</TableCell>
+                     </TableRow>
+                     <TableRow>
+                      <TableCell className="font-medium">Total Tax</TableCell>
+                      <TableCell className="text-right">{(totalTax.fixedTax + totalTax.varTax).toLocaleString()}</TableCell>
+                     </TableRow>
+                     <TableRow>
+                      <TableCell className="font-medium">Monthly Deductions</TableCell>
+                      <TableCell className="text-right">{(((totalTax.fixedTax + totalTax.varTax) / 12).toFixed(0)).toLocaleString()}</TableCell>
+                     </TableRow>
+              </TableBody>
+            </Table>
+            <h1 className='text-center text-gray-400'>Information pertains to PSID eFiling </h1>
+
+            <Table>
+              {/* <TableCaption>Information pertains to PSID eFiling</TableCaption> */}
+                  
+                <TableBody>
+                    {/* <TableRow>
+                      <TableCell className="font-medium">Employment Status</TableCell>
+                      <TableCell className="text-right">{taxCode.status}</TableCell>
+                     </TableRow> */}
+                     <TableRow>
+                      <TableCell className="font-medium">Payment Section(PSID)</TableCell>
+                      <TableCell className="text-right">{taxCode.section}</TableCell>
+                     </TableRow>
+                     <TableRow>
+                      <TableCell className="font-medium">Tax Code (eFiling)</TableCell>
+                      <TableCell className="text-right">{taxCode.code}</TableCell>
+                     </TableRow>
+                    
+              </TableBody>
+            </Table>
+
+           </div>
 
 
-        <div className='flex '>
-          <div className='w-48'>
-              <p>Annual Income:</p>
-              <p>Tax Rate: </p>
-              <p>Fix Tax: </p>
-              <p>Variable Tax: </p>
-              <p>Total Tax: </p>
-              <p>Monthly Deduction : </p>
-              <p>_________________________</p>
-              <p>Employment Status</p>
-              <p>Payment Section</p>
-              <p>Tax Code</p>
 
-          </div>
-          <div className='text-right w-36'>
-              <p> {annualSal.toLocaleString()}</p>
-              <p> {((result.taxRate || 0) * 100).toLocaleString()}%</p>
-              <p> {totalTax.fixedTax.toLocaleString()}</p>
-              <p> {totalTax.varTax.toLocaleString()}</p>
-              <p> {(totalTax.fixedTax + totalTax.varTax).toLocaleString()}</p>
-              <p> {(((totalTax.fixedTax + totalTax.varTax) / 12).toFixed(0)).toLocaleString()}</p>
-              <p>___________________</p>
-              <p> {taxCode.status} </p>
-              <p> {taxCode.section} </p>
-              <p> {taxCode.code} </p>
-          </div>
-        </div>
+
         </div>
     </div>
   );
