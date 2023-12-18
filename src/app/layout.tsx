@@ -7,7 +7,10 @@ import Navbar from '@/components/navbar'
 
 import { cn } from '@/lib/utils'
  
-
+export const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+})
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -25,7 +28,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={cn(
           "min-h-screen bg-background font-sans antialiased",
-          // fontSans.variable
+          fontSans.variable
         )}>
         
       <Navbar />
