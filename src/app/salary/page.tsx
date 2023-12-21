@@ -116,7 +116,7 @@ const Salary = () => {
           
           <Select  
           
-          onValueChange={(e) => setSelectedEmploymentStatus(e)}
+          onValueChange={(e: React.SetStateAction<string>) => setSelectedEmploymentStatus(e)}
           >
             <SelectTrigger className="w-[250px] my-2 shadow-xl">
               <SelectValue placeholder="Employment Status?" />
