@@ -152,7 +152,7 @@ const Salary = () => {
         <div className='flex gap-2'>
             <div>
               <Select  
-                onValueChange={(e: React.SetStateAction<number>) => setTaxYear(e)}
+                onValueChange={(e: any) => setTaxYear(e)}
               >
                 <SelectTrigger className=" w:[48px] md:w-[98px] my-2 shadow-xl">
                   <SelectValue placeholder="Tax Year?" />
