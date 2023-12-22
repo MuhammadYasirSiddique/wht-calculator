@@ -33,7 +33,7 @@ const taxSlab = [
   { id: 3, min: 1200001, max: 2400000, fixTax: 15000, taxRate: 0.125 },
   { id: 4, min: 2400001, max: 3600000, fixTax: 165000, taxRate: 0.225 },
   { id: 5, min: 3600001, max: 6000000, fixTax: 435000, taxRate: 0.275 },
-  { id: 6, min: 6000001, max: 999999999999, fixTax: 1095000, taxRate: 0.35 }
+  { id: 6, min: 6000001, max: 999999999, fixTax: 1095000, taxRate: 0.35 }
 ];
 
 const taxCodeSalary = [
@@ -45,6 +45,7 @@ const taxCodeSalary = [
 
 const Salary = () => {
   const [salary, setSalary] = useState<number>(0);
+  const [taxYear, setTaxYear] = useState<number>(2024);
   const [selectedEmploymentStatus, setSelectedEmploymentStatus] = useState(null || '');
 
   const [annualSal, setAnnualSal] = useState<number>(0);
@@ -61,6 +62,11 @@ const Salary = () => {
     let taxCode: {id?: number, status?: string, section: string, nature?: string ,code?: string} = {
       section: ''
     };
+
+    if(annualSal > 999999999){
+      toast.error('Salary out of range. Value cannot be greater than 999,999,999');
+      return;
+    }
 
     for (const slab of taxSlab) {
       if (annualSal >= slab.min && annualSal <= slab.max) {
@@ -106,9 +112,9 @@ const Salary = () => {
 
 
   return (
-    <div className="items-center mt-5 ">
+    <div className="mx-auto max-w-2xl p-4">
       <div>
-        <h1 className="text-center">Salary</h1>
+          <h1 className="text-center text-3xl font-bold">Salary</h1>
       </div>
       <div className="flex flex-col items-center justify-center ">
         
@@ -118,7 +124,7 @@ const Salary = () => {
           
           onValueChange={(e: React.SetStateAction<string>) => setSelectedEmploymentStatus(e)}
           >
-            <SelectTrigger className="w-[250px] my-2 shadow-xl">
+            <SelectTrigger className="w-[200px] md:w-[250px] my-2 shadow-xl">
               <SelectValue placeholder="Employment Status?" />
             </SelectTrigger>
             <SelectContent > 
@@ -135,7 +141,7 @@ const Salary = () => {
         <div>
 
           <Input           
-          className="border w-[250px] shadow-xl"
+          className="border w-[200px] md:w-[250px] shadow-xl"
           type="text"
           placeholder='Enter Per Month Salary'
           pattern="[0-9]*"
@@ -143,19 +149,36 @@ const Salary = () => {
           />
          
         </div>
-        
-        <Button className='mt-2 w-[250px] shadow-xl'
-        onClick={() => handleClick(salary, selectedEmploymentStatus)}
-        >Calculate</Button>
+        <div className='flex gap-2'>
+            <div>
+              <Select  
+                onValueChange={(e: React.SetStateAction<number>) => setTaxYear(e)}
+              >
+                <SelectTrigger className=" w:[48px] md:w-[98px] my-2 shadow-xl">
+                  <SelectValue placeholder="Tax Year?" />
+                </SelectTrigger>
+                <SelectContent > 
+                  <SelectItem value="Federal Govt">2024</SelectItem>
+                    {/* <SelectItem value="Provincial Govt">Provincial Govt</SelectItem>
+                    <SelectItem value="Other">Other</SelectItem> */}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Button className='mt-2 w-[112px] md:w-[148px] shadow-xl'
+              onClick={() => handleClick(salary, selectedEmploymentStatus)}
+              >Calculate</Button>
+              </div>      
+            </div>
 
           <div className='mt-5 shadow-2xl'>
             <h1 className='text-center text-gray-400 '>Witholding Tax Calculation </h1>
 
-            <Table className='w-[400px] '>
+            <Table className='w=full md:w-[400px] '>
               {/* <TableCaption>Witholding Tax Calculation</TableCaption> */}
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="w-[300px]">Descripton</TableHead>
+                      <TableHead className="w-full md:w-[300px]">Descripton</TableHead>
                       
                       <TableHead className="text-right">Amount</TableHead>
                     </TableRow>
@@ -182,8 +205,9 @@ const Salary = () => {
                       <TableCell className="text-right font-bold">{(totalTax.fixedTax + totalTax.varTax).toLocaleString()}</TableCell>
                      </TableRow>
                      <TableRow>
-                      <TableCell className="font-bold text-rose-600">Monthly Deduction</TableCell>
-                      <TableCell className="text-right font-bold text-rose-600">{(((totalTax.fixedTax + totalTax.varTax) / 12).toFixed(0)).toLocaleString()}</TableCell>
+                      <TableCell className="font-bold text-rose-600">Monthly Deduction( for 12 months)</TableCell>
+                      <TableCell className="text-right font-bold text-rose-600">
+                        {(((totalTax.fixedTax + totalTax.varTax) / 12).toFixed(0)).toLocaleString()}</TableCell>
                      </TableRow>
               </TableBody>
             </Table>
