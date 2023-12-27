@@ -307,7 +307,7 @@ interface TaxSlab {
 
 const getTaxSlab = async() =>{
 try {
-    const res = await fetch("http://127.0.0.1:3000/api/taxslab", {
+    const res = await fetch("/api/taxslab", {
         method : "GET",
         cache: "no-store",
         headers: {
