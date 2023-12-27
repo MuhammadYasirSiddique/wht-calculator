@@ -5,6 +5,8 @@ import Navbar from '@/components/navbar'
 
 
 import { cn } from '@/lib/utils'
+import Footer from '@/components/footer'
+import Contact from '@/components/contact'
  
 const interFont = Inter({
   display: 'swap',
@@ -34,7 +36,8 @@ export default function RootLayout({
       <Navbar />
       
         {children}
-        
+        <Contact />
+        <Footer />
       </body>
     </html>
   )

@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
             // const data = result.rows.find(row => row.id === 2);
             const data = result.rows;
 
-            return NextResponse.json({ message: 'Data Fetched', data });
+            return NextResponse.json({  data });
         // }
 
 

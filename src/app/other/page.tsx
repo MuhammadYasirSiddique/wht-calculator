@@ -1,7 +1,7 @@
 import UnderDevelopment from '@/components/underdevelopment';
 import React from 'react'
 
-const NonSalary = () => {
+const Other = () => {
   return (
  
     <UnderDevelopment />
@@ -9,4 +9,4 @@ const NonSalary = () => {
 
 }
 
-export default NonSalary
+export default Other

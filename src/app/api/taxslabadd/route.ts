@@ -106,12 +106,12 @@
     
             if (requestData) {
                 // Assuming requestData has the necessary fields for insertion
-                const { id, min, max, fixtax, taxrate, taxyear } = requestData;
+                const { mid, taxyear, sid, min, max, fixtax, taxrate  } = requestData;
     
                 // You might need to modify this query based on your database structure
                 await client.sql`
-                    INSERT INTO taxslab(id, min, max, fixtax, taxrate, taxyear)
-                    VALUES (${id}, ${min}, ${max}, ${fixtax}, ${taxrate}, ${taxyear})`;
+                    INSERT INTO taxslab(mid, taxyear, sid, min, max, fixtax, taxrate)
+                    VALUES (${mid}, ${taxyear}, ${sid}, ${min}, ${max}, ${fixtax}, ${taxrate})`;
     
                 return NextResponse.json({ message: 'Record added successfully' });
             } else {
