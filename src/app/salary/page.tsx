@@ -307,7 +307,7 @@ interface TaxSlab {
 
 const getTaxSlab = async() =>{
 try {
-    const res = await fetch("/api/taxslab", {
+    const res = await fetch("http://127.0.0.1:3000/api/taxslab", {
         method : "GET",
         cache: "no-store",
         headers: {
@@ -329,12 +329,13 @@ try {
 const Home =async() =>{
 
     const res = await getTaxSlab();
+    const taxSlab = res    
+    // console.log(taxSlab)
+    // console.log((taxSlab.data).filter((slab: any) => slab.mid === 3))
 
-   const taxSlab = res    
-    
 return(
     <div>
-        <Salary taxSlab = {taxSlab} />
+        <Salary taxSlab = {taxSlab.data} />
     </div>
 )}
 

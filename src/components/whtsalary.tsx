@@ -26,34 +26,19 @@ import {
 } from "@/components/ui/select"
 
 interface TaxSlab {
-    id: number;
+    mid: number;
+    sid: number;
     taxyear: number;
     min: number;
     max: number;
-    fixTax: number;
-    taxRate: number;
+    fixtax: number;
+    taxrate: number;
   }
   
   interface taxSlabProps {
     taxSlab: TaxSlab[];
   }
 
-// const taxSlab1 = [
-//   { mid: 1, id: 1 , taxyear: 2024, min: 0, max: 600000, fixTax: 0, taxRate: 0 },
-//   { mid: 2, id: 2, taxyear: 2024, min: 600001, max: 1200000, fixTax: 0, taxRate: 0.025 },
-//   { mid: 3, id: 3, taxyear: 2024, min: 1200001, max: 2400000, fixTax: 15000, taxRate: 0.125 },
-//   { mid: 4, id: 4, taxyear: 2024, min: 2400001, max: 3600000, fixTax: 165000, taxRate: 0.225 },
-//   { mid: 5, id: 5, taxyear: 2024, min: 3600001, max: 6000000, fixTax: 435000, taxRate: 0.275 },
-//   { mid: 6, id: 6, taxyear: 2024, min: 6000001, max: 999999999, fixTax: 1095000, taxRate: 0.35 },
-
-//   { mid: 7, id: 1, taxyear: 2023, min: 0, max: 600000, fixTax: 0, taxRate: 0 },
-//   { mid: 8, id: 2, taxyear: 2023, min: 600001, max: 1200000, fixTax: 0, taxRate: 0.025 },
-//   { mid: 9, id: 3, taxyear: 2023, min: 1200001, max: 2400000, fixTax: 15000, taxRate: 0.125 },
-//   { mid: 10, id: 4, taxyear: 2023, min: 2400001, max: 3600000, fixTax: 165000, taxRate: 0.20 },
-//   { mid: 11, id: 5, taxyear: 2023, min: 3600001, max: 6000000, fixTax: 405000, taxRate: 0.25 },
-//   { mid: 12, id: 6, taxyear: 2023, min: 6000001, max: 12000000, fixTax: 1005000, taxRate: 0.325 },
-//   { mid: 13, id: 7, taxyear: 2023, min: 12000001, max: 999999999, fixTax: 2955000, taxRate: 0.35 }
-// ];
 
 const taxCodeSalary = [
   { id: 1, status: 'Federal Govt', section: '149/1', nature: 'Adjustable' , code: '64020001' },
@@ -69,14 +54,14 @@ const Salary = ({taxSlab}: taxSlabProps) => {
 
   const [annualSal, setAnnualSal] = useState<number>(0);
   const [result, setResult] = useState<{ id?: number, min?: number, max?: number, 
-        fixTax?: number; taxRate?: number }>({});
+        fixTax?: number; taxrate?: number }>({});
   const [totalTax, setTotalTax] = useState<{fixedTax: number, varTax: number}>({fixedTax: 0, varTax: 0});
   const [taxCode, setTaxCode] = useState<{id?: number, status?: string, section?: string, nature?: string ,code?: string}>({});
   
   const taxCalc = (salary: number, selectedEmploymentStatus: string, taxYear: number) => {
     let annualSal = salary * 12;
     let result: {id?: number, min?: number, max?: number, 
-                fixTax?: number; taxRate?: number, taxyear?: number } = {};
+                fixTax?: number; taxrate?: number, taxyear?: number } = {};
     let tax : {fixedTax: number; varTax: number};
     let taxCode: {id?: number, status?: string, section: string, nature?: string ,code?: string} = {
       section: ''
@@ -88,26 +73,39 @@ const Salary = ({taxSlab}: taxSlabProps) => {
       toast.error('Salary out of range. Value cannot be greater than 999,999,999');
       return;
     }
-    // console.log(taxSlab )
-    const values = Object.values(taxSlab);
-    // console.log(values)
+    // console.log(taxSlab)
+    
+    
 
     
-    const filteredSlabs: TaxSlab[] = values.filter((slab) => slab.taxyear === Number(taxYear));
-    console.log(filteredSlabs)
+    const filteredSlabs: TaxSlab[] = Object.values(taxSlab).filter((slab) => slab.taxyear === Number(taxYear));
+    // // console.log("Current Slab:", slab);
+      // console.log("Tax Year from Input: ", taxYear);
+    
+      
+      
+      // Your filtering condition with optional chaining
+      // const meetsCondition = slab.taxyear === Number(taxYear);
+      // console.log("Fix Tax from Slab: ", slab.fixtax);
+      // console.log("Meets Condition:", meetsCondition);
+    
+    //   return meetsCondition;
+    // });
+    
+    // console.log(filteredSlabs)
     
     for (const slab of filteredSlabs) {
 
       if (annualSal >= slab.min && annualSal <= slab.max && Number(taxYear) === slab.taxyear) {
-        result = {id: slab.id, min: slab.min, max: slab.max, 
-                  fixTax: slab.fixTax, taxRate: slab.taxRate, taxyear: slab.taxyear};
+        result = {id: slab.mid, min: slab.min, max: slab.max, 
+                  fixTax: slab.fixtax, taxrate: slab.taxrate, taxyear: slab.taxyear};
           
         break;
       }
 
     }
     setResult(result);
-    // console.log(result)
+    // console.log(result.fixTax)
 
     for(const code of taxCodeSalary){
       if(selectedEmploymentStatus === code.status){
@@ -118,7 +116,7 @@ const Salary = ({taxSlab}: taxSlabProps) => {
     setTaxCode(taxCode)
 
     tax = {fixedTax: result.fixTax || 0,
-      varTax: parseInt(((annualSal - (result.min || 0)) * (result.taxRate || 0)).toFixed(0))
+      varTax: parseInt(((annualSal - (result.min || 0)) * (result.taxrate || 0)).toFixed(0))
     };
     setAnnualSal(annualSal);
     
@@ -129,16 +127,7 @@ const Salary = ({taxSlab}: taxSlabProps) => {
   };
 
   const handleClick = (salary: number, selectedEmploymentStatus: string, taxYear: number) => {
-    // if (salary <= 0 || !selectedEmploymentStatus || taxYear == 0){
-      
-    //   toast.error("Please enter a valid salary and select an employment status", {
-    //     autoClose: 2500,
-    //   });
-    //   return;
-    // 
-
-    
-
+   
     if (salary <= 0 ){
       
       toast.error("Please enter salary greater than ZERO", {
@@ -162,10 +151,6 @@ const Salary = ({taxSlab}: taxSlabProps) => {
       });
       return;
     }
-
-
-
-
 
     // console.log(selectedEmploymentStatus)
     
@@ -253,7 +238,7 @@ const Salary = ({taxSlab}: taxSlabProps) => {
                      </TableRow>
                      <TableRow>
                       <TableCell className="font-medium">Tax Rate:</TableCell>
-                      <TableCell className="text-right">{((result.taxRate || 0) * 100).toLocaleString()}%</TableCell>
+                      <TableCell className="text-right">{((result.taxrate || 0) * 100).toLocaleString()}%</TableCell>
                      </TableRow>
                      <TableRow>
                       <TableCell className="font-medium">Fixed Tax</TableCell>
@@ -265,12 +250,12 @@ const Salary = ({taxSlab}: taxSlabProps) => {
                      </TableRow>
                      <TableRow>
                       <TableCell className=" font-bold">Total Tax</TableCell>
-                      <TableCell className="text-right font-bold">{(totalTax.fixedTax + totalTax.varTax).toLocaleString()}</TableCell>
+                      <TableCell className="text-right font-bold">{(Number(totalTax.fixedTax) + Number(totalTax.varTax)).toLocaleString()}</TableCell>
                      </TableRow>
                      <TableRow>
                       <TableCell className="font-bold text-rose-600">Monthly Deduction( for 12 months)</TableCell>
                       <TableCell className="text-right font-bold text-rose-600">
-                        {(((totalTax.fixedTax + totalTax.varTax) / 12).toFixed(0)).toLocaleString()}</TableCell>
+                        {(((Number(totalTax.fixedTax) + Number(totalTax.varTax)) / 12).toFixed(0)).toLocaleString()}</TableCell>
                      </TableRow>
               </TableBody>
             </Table>
