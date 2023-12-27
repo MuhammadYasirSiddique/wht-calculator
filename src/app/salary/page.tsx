@@ -307,7 +307,7 @@ interface TaxSlab {
 
 const getTaxSlab = async() =>{
 try {
-    const res = await fetch("https://wht-calculator.vercel.app/api/taxslab", {
+    const res = await fetch("/api/taxslab", {
         method : "GET",
         cache: "no-store",
         headers: {
