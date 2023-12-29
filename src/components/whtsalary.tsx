@@ -7,7 +7,7 @@ import * as React from "react"
 import  { Toaster } from 'react-hot-toast';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import Image from 'next/image';
 import {
   Table,
   TableBody,
@@ -25,6 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
+
 interface TaxSlab {
     mid: number;
     sid: number;
@@ -33,6 +34,8 @@ interface TaxSlab {
     max: number;
     fixtax: number;
     taxrate: number;
+    status?: string | null; // Add status prop with optional type
+
   }
   
   interface taxSlabProps {
@@ -48,6 +51,8 @@ const taxCodeSalary = [
 
 
 const Salary = ({taxSlab}: taxSlabProps) => {
+  const [loading, setLoading] = useState(true); // Set loading to true initially
+
     const [salary, setSalary] = useState<number>(0);
   const [taxYear, setTaxYear] = useState<number>(0);
   const [selectedEmploymentStatus, setSelectedEmploymentStatus] = useState(null || '');
@@ -126,8 +131,8 @@ const Salary = ({taxSlab}: taxSlabProps) => {
 
   };
 
-  const handleClick = (salary: number, selectedEmploymentStatus: string, taxYear: number) => {
-   
+  const handleClick = async (salary: number, selectedEmploymentStatus: string, taxYear: number) => {
+
     if (salary <= 0 ){
       
       toast.error("Please enter salary greater than ZERO", {
@@ -152,17 +157,44 @@ const Salary = ({taxSlab}: taxSlabProps) => {
       return;
     }
 
-    // console.log(selectedEmploymentStatus)
-    
+    await new Promise((resolve) => setTimeout(resolve)); // Simulate an asynchronous operation
+    // Call the taxCalc function
+    taxCalc(salary, selectedEmploymentStatus, taxYear);
+    setLoading(false); // Set loading to false when the calculation is complete
+
+ 
     taxCalc(salary, selectedEmploymentStatus, taxYear);
   };
-
+  React.useEffect(() => {
+    // Check if taxSlab data is available
+    if (taxSlab && taxSlab.length > 0) {
+      setLoading(false); // Set loading to false when taxSlab data is available
+    }
+  }, [taxSlab]);
 
   return (
     <div className="mx-auto max-w-2xl p-4">
       <div>
           <h1 className="text-center text-3xl font-bold my-5">Calculate Witholding tax on Salary</h1>
       </div>
+
+    <div>
+    {loading &&(
+            <div className='mt-10 text center items-center justify-center'>
+              <Image  src={'/load.gif'} 
+                      alt={'Loader Image'} 
+                      width={200} 
+                      height={200} />
+              <p className='text-center text-3xl'>Loading...</p>
+            </div>
+        )}
+    </div>
+
+<div>
+
+
+
+{!loading && (
       <div className="flex flex-col items-center justify-center ">
         
         <div>
@@ -286,8 +318,8 @@ const Salary = ({taxSlab}: taxSlabProps) => {
 
 
 
-
-        </div>
+           </div>)}
+      </div>
     </div>
   );
 };

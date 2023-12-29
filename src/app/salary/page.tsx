@@ -7,9 +7,12 @@ interface TaxSlab {
   max: number;
   fixTax: number;
   taxRate: number;
+  status?: string | null; // Add status prop with optional type
+
 }
 
 const getTaxSlab = async() =>{
+   
 try {
     const res = await fetch("https://wht-calculator.vercel.app/api/taxslab", {
         method : "GET",
@@ -20,6 +23,7 @@ try {
     })
     
     if (!res.ok) {
+        
         throw new Error("Failed to fetch the data")
     };
     const result = await res.json()
