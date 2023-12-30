@@ -1,3 +1,4 @@
+import NoInternet from "@/components/nointernet";
 import Salary from "@/components/whtsalary"
 
 interface TaxSlab {
@@ -37,6 +38,14 @@ try {
 const Home =async() =>{
 
     const res = await getTaxSlab();
+    if (!res) {
+        
+        
+        return(
+            // eslint-disable-next-line react/jsx-no-undef
+            <NoInternet />
+        )
+    };
     const taxSlab = res.data
 
     // console.log(res.data)

@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import Loading from './loader';
 
 
 interface TaxSlab {
@@ -180,13 +181,7 @@ const Salary = ({taxSlab}: taxSlabProps) => {
 
     <div>
     {loading &&(
-            <div className='mt-10 text center items-center justify-center'>
-              <Image  src={'/load.gif'} 
-                      alt={'Loader Image'} 
-                      width={200} 
-                      height={200} />
-              <p className='text-center text-3xl'>Loading...</p>
-            </div>
+            <Loading />
         )}
     </div>
 
