@@ -4,10 +4,15 @@ import UnderDevelopment from '@/components/underdevelopment';
 import React from 'react';
 
 const Home = () => {
+  
+
+  
   return (
+    <div>
    
     <HomePage />
-    // <UnderDevelopment />
+    {/* <UnderDevelopment /> */}
+    </div>
   );
 };
 

@@ -28,6 +28,7 @@ try {
         throw new Error("Failed to fetch the data")
     };
     const result = await res.json()
+    // console.log(result)
     return result
 
 } catch (error) {
@@ -42,7 +43,7 @@ const Home =async() =>{
         
         
         return(
-            // eslint-disable-next-line react/jsx-no-undef
+            
             <NoInternet />
         )
     };

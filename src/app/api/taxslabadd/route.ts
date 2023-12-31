@@ -89,14 +89,14 @@
     const API_KEY = process.env.TAX_SLAB_ADD_SECRET_KEY;
     
     export async function POST(request: NextRequest) {
-        console.log('API_KEY', API_KEY);
+        // console.log('API_KEY', API_KEY);
         const client = await db.connect();
     
         const requestData = await request.json();
-        console.log("Request Data", requestData);
+        // console.log("Request Data", requestData);
     
         const apiKey = request.headers.get('auth') ?? '';
-        console.log('apiKey', apiKey);
+        // console.log('apiKey', apiKey);
     
         try {
             // Validate the API key
@@ -118,7 +118,8 @@
                 throw new Error('Failed to add record');
             }
         } catch (error) {
-            console.error(error);
+            // console.error(error);
+            console.log((error as { message: string }).message)
             return NextResponse.json({ message: 'Authentication failed or ' + (error as { message: string }).message });
         } finally {
             client.release();

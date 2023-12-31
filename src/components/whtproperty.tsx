@@ -27,7 +27,7 @@ import {
 import Loading from './loader';
 
 
-interface TaxSlab {
+interface TaxSlabProperty {
     mid: number;
     sid: number;
     taxyear: number;
@@ -40,32 +40,32 @@ interface TaxSlab {
   }
   
   interface taxSlabProps {
-    taxSlab: TaxSlab[];
+    taxSlabProperty: TaxSlabProperty[];
   }
 
 
-const taxCodeSalary = [
-  { id: 1, status: 'Federal Govt', section: '149/1', nature: 'Adjustable' , code: '64020001' },
-  { id: 2, status: 'Provincial Govt', section: '149/2', nature: 'Adjustable', code: '64020002'  },
-  { id: 3, status : 'Other', section: '149/3',nature: 'Adjustable', code: '64020004' },
+const taxCodeProperty = [
+  { id: 1, section: '155', nature: 'Adjustable' , code: '64080001' },
+  
 ]
 
 
-const Salary = ({taxSlab}: taxSlabProps) => {
+const Property = ({taxSlabProperty}: taxSlabProps) => {
   const [loading, setLoading] = useState(true); // Set loading to true initially
-
-    const [salary, setSalary] = useState<number>(0);
+  const [month, setMonth] = useState<number>(0);
+    const [rent, setRent] = useState<number>(0);
   const [taxYear, setTaxYear] = useState<number>(0);
-  const [selectedEmploymentStatus, setSelectedEmploymentStatus] = useState(null || '');
+  const [regStatus, setRegStatus] = useState<string>("");
+  const [filingStatus, setFilingStatus] = useState<string>("");
 
-  const [annualSal, setAnnualSal] = useState<number>(0);
+  const [annualRent, setAnnualRent] = useState<number>(0);
   const [result, setResult] = useState<{ id?: number, min?: number, max?: number, 
         fixTax?: number; taxrate?: number }>({});
   const [totalTax, setTotalTax] = useState<{fixedTax: number, varTax: number}>({fixedTax: 0, varTax: 0});
   const [taxCode, setTaxCode] = useState<{id?: number, status?: string, section?: string, nature?: string ,code?: string}>({});
   
-  const taxCalc = (salary: number, selectedEmploymentStatus: string, taxYear: number) => {
-    let annualSal = salary * 12;
+  const taxCalc = (rent: number, month: number, taxYear: number) => {
+    let annualRent = rent * month;
     let result: {id?: number, min?: number, max?: number, 
                 fixTax?: number; taxrate?: number, taxyear?: number } = {};
     let tax : {fixedTax: number; varTax: number};
@@ -75,18 +75,18 @@ const Salary = ({taxSlab}: taxSlabProps) => {
 
     
 
-    if(annualSal > 999999999){
-      toast.error('Salary out of range. Value cannot be greater than 999,999,999');
+    if(annualRent > 999999999){
+      toast.error('Rent Anount is out of range. Value cannot be greater than 999,999,999');
       return;
     }
      
 
     
-    const filteredSlabs: TaxSlab[] = Object.values(taxSlab).filter((slab) => slab.taxyear === Number(taxYear));
+    const filteredSlabs: TaxSlabProperty[] = Object.values(taxSlabProperty).filter((slab) => slab.taxyear === Number(taxYear));
         
     for (const slab of filteredSlabs) {
 
-      if (annualSal >= slab.min && annualSal <= slab.max && Number(taxYear) === slab.taxyear) {
+      if (annualRent >= slab.min && annualRent <= slab.max && Number(taxYear) === slab.taxyear) {
         result = {id: slab.mid, min: slab.min, max: slab.max, 
                   fixTax: slab.fixtax, taxrate: slab.taxrate, taxyear: slab.taxyear};
           
@@ -95,46 +95,53 @@ const Salary = ({taxSlab}: taxSlabProps) => {
 
     }
     setResult(result);
-    // console.log(result.fixTax)
+    
+    // console.log(result.taxrate)
 
-    for(const code of taxCodeSalary){
-      if(selectedEmploymentStatus === code.status){
-        taxCode = {id: code.id, status: code.status, section: code.section, nature: code.nature, code: code.code,};
+    for(const code of taxCodeProperty){
+      
+        taxCode = {id: code.id, section: code.section, nature: code.nature, code: code.code,};
         break;
-      }
+      
     }
     setTaxCode(taxCode)
 
-    tax = {fixedTax: result.fixTax || 0,
-      varTax: parseInt(((annualSal - (result.min || 0)) * (result.taxrate || 0)).toFixed(0))
-    };
-    setAnnualSal(annualSal);
+    if(filingStatus === "nonfiler"){
+      console.log("Tax payer is non filer")
+      tax = {fixedTax: ((result.fixTax || 0 )* 2),
     
-    setTotalTax(tax)
+        varTax: parseInt((((annualRent - (result.min || 0)) * (result.taxrate || 0))*2).toFixed(0))
+        };
+      
+        setTotalTax(tax)
+        console.log(tax)
+    }
+    else {
+
+      tax = {fixedTax: result.fixTax || 0,
+        
+        varTax: parseInt(((annualRent - (result.min || 0)) * (result.taxrate || 0)).toFixed(0))
+      };
+      setTotalTax(tax)
+    }
+    
+    setAnnualRent(annualRent);
     
     // console.log(taxCode.status, taxCode.code)
 
   };
 
-  const handleClick = async (salary: number, selectedEmploymentStatus: string, taxYear: number) => {
+  const handleClick = async (salary: number, month: number, taxYear: number) => {
 
     if (salary <= 0 ){
       
-      toast.error("Please enter salary greater than ZERO", {
+      toast.error("Please enter rent payment greater than ZERO", {
         autoClose: 2500,
       });
       return;
     }
 
-    if (!selectedEmploymentStatus){
-      
-      toast.error("Please select a valid employment status", {
-        autoClose: 2500,
-      });
-      return;
-    }
-
-    if ( taxYear == 0 ) {
+        if ( taxYear == 0 ) {
       
       toast.error("Please select relevant Tax Year", {
         autoClose: 2500,
@@ -142,25 +149,49 @@ const Salary = ({taxSlab}: taxSlabProps) => {
       return;
     }
 
+    if (!month){
+      
+        toast.error("Please select number of monhts for which rent is being paid", {
+          autoClose: 2500,
+        });
+        return;
+      }
+
+      if (!regStatus){
+      
+        toast.error("Please Select registration type of Taxpayer", {
+          autoClose: 2500,
+        });
+        return;
+      }
+
+      if (!filingStatus){
+      
+        toast.error("Please select the filing status of taxpayer", {
+          autoClose: 2500,
+        });
+        return;
+      }
+
     await new Promise((resolve) => setTimeout(resolve)); // Simulate an asynchronous operation
     // Call the taxCalc function
-    taxCalc(salary, selectedEmploymentStatus, taxYear);
+    taxCalc(salary, month, taxYear);
     setLoading(false); // Set loading to false when the calculation is complete
 
  
-    taxCalc(salary, selectedEmploymentStatus, taxYear);
+    taxCalc(salary, month, taxYear);
   };
   React.useEffect(() => {
     // Check if taxSlab data is available
-    if (taxSlab && taxSlab.length > 0) {
+    if (taxSlabProperty && taxSlabProperty.length > 0) {
       setLoading(false); // Set loading to false when taxSlab data is available
     }
-  }, [taxSlab]);
+  }, [taxSlabProperty]);
 
   return (
     <div className="mx-auto max-w-2xl p-4">
       <div>
-          <h1 className="text-center text-3xl font-bold my-5">Calculate Witholding tax on Salary</h1>
+          <h1 className="text-center text-3xl font-bold my-5">Witholding tax on Payment of Rent of Immoveable Property</h1>
       </div>
 
     <div>
@@ -176,34 +207,15 @@ const Salary = ({taxSlab}: taxSlabProps) => {
 {!loading && (
       <div className="flex flex-col items-center justify-center ">
         
-        <div>
-          
-          <Select  
-          
-          onValueChange={(e: React.SetStateAction<string>) => setSelectedEmploymentStatus(e)}
-          >
-            <SelectTrigger className="w-[200px] md:w-[250px] my-2 shadow-xl">
-              <SelectValue placeholder="Employment Status?" />
-            </SelectTrigger>
-            <SelectContent > 
-              <SelectItem value="Federal Govt">Federal Govt</SelectItem>
-              <SelectItem value="Provincial Govt">Provincial Govt</SelectItem>
-              <SelectItem value="Other">Other</SelectItem>
-            </SelectContent>
-          </Select>
-
-
-
-        </div>
         <div><ToastContainer/></div>
         <div>
 
           <Input           
           className="border w-[200px] md:w-[250px] shadow-xl"
           type="text"
-          placeholder='Enter Per Month Salary'
+          placeholder='Enter Monthly Rent'
           pattern="[0-9]*"
-          onChange={(e) => setSalary(parseInt(e.target.value))}
+          onChange={(e) => setRent(parseInt(e.target.value))}
           />
          
         </div>
@@ -213,8 +225,8 @@ const Salary = ({taxSlab}: taxSlabProps) => {
                 onValueChange={(e:any) => setTaxYear(e)}
                 
               >
-                <SelectTrigger className=" w-[200px] md:w-[98px] my-2 shadow-xl ">
-                  <SelectValue placeholder="Tax Year?"  />
+                <SelectTrigger className=" w-[200px] md:w-[106px] my-2 shadow-xl ">
+                  <SelectValue placeholder="Tax Year"  />
                 </SelectTrigger>
                 <SelectContent > 
                   <SelectItem value="2024">2024</SelectItem>
@@ -224,13 +236,70 @@ const Salary = ({taxSlab}: taxSlabProps) => {
               </Select>
             </div>
             <div>
-              <Button className='mt-2 w-[200px] md:w-[148px] shadow-xl'
-              onClick={() => handleClick(salary, selectedEmploymentStatus, taxYear)}
-              >Calculate</Button>
-              </div>      
-            </div>
+            <Select  
+                onValueChange={(e:any) => setMonth(e)}
+                
+              >
+                <SelectTrigger className=" w-[200px] md:w-[132px] my-2 shadow-xl ">
+                  <SelectValue placeholder="No of Months"  />
+                </SelectTrigger>
+                <SelectContent > 
+                  <SelectItem value="1">1</SelectItem>
+                  <SelectItem value="2">2</SelectItem>
+                  <SelectItem value="3">3</SelectItem>
+                  <SelectItem value="4">4</SelectItem>
+                  <SelectItem value="5">5</SelectItem>
+                  <SelectItem value="6">6</SelectItem>
+                  <SelectItem value="7">7</SelectItem>
+                  <SelectItem value="8">8</SelectItem>
+                  <SelectItem value="9">9</SelectItem>
+                  <SelectItem value="10">10</SelectItem>
+                  <SelectItem value="11">11</SelectItem>
+                  <SelectItem value="12">12</SelectItem>
+                    
+                </SelectContent>
+              </Select>
 
-          <div className='mt-5 shadow-2xl'>
+            </div>
+        </div>
+        <div className='md:flex gap-2 '>
+            <div>
+                <Select  
+                     onValueChange={(e:any) => setRegStatus(e)}
+                >
+                    <SelectTrigger className=" w-[200px] md:w-[120px] my-2 shadow-xl ">
+                        <SelectValue placeholder="Reg: Status"  />
+                    </SelectTrigger>
+                    <SelectContent > 
+                        <SelectItem value="ind">Individual / AOP</SelectItem>
+                        <SelectItem value="com">Company</SelectItem>
+                    </SelectContent>
+                </Select>
+            </div>
+            <div>
+            <Select  
+                     onValueChange={(e:any) => setFilingStatus(e)}
+                >
+                    <SelectTrigger className=" w-[200px] md:w-[120px] my-2 shadow-xl ">
+                        <SelectValue placeholder="Filing Status"  />
+                    </SelectTrigger>
+                    <SelectContent > 
+                        <SelectItem value="filer">Filer</SelectItem>
+                        <SelectItem value="nonfiler">Non Filer</SelectItem>
+                    </SelectContent>
+                </Select>
+
+            </div>
+        </div>
+        <div>
+            <Button className='mt-2 w-[200px] md:w-[250px] shadow-xl'
+                onClick={() => handleClick(rent, month, taxYear)}
+                >Calculate</Button>
+        </div>      
+        
+
+
+              <div className='mt-5 shadow-2xl'>
             <h1 className='text-center text-gray-400 '>Witholding Tax Calculation </h1>
 
             <Table className='w=full md:w-[400px] '>
@@ -245,7 +314,7 @@ const Salary = ({taxSlab}: taxSlabProps) => {
                 <TableBody>
                     <TableRow>
                       <TableCell className="font-medium">Annual Income</TableCell>
-                      <TableCell className="text-right">{annualSal.toLocaleString()}</TableCell>
+                      <TableCell className="text-right">{annualRent.toLocaleString()}</TableCell>
                      </TableRow>
                      <TableRow>
                       <TableCell className="font-medium">Tax Rate:</TableCell>
@@ -264,13 +333,13 @@ const Salary = ({taxSlab}: taxSlabProps) => {
                       <TableCell className="text-right font-bold">{(Number(totalTax.fixedTax) + Number(totalTax.varTax)).toLocaleString()}</TableCell>
                      </TableRow>
                      <TableRow>
-                      <TableCell className="font-bold text-rose-600">Monthly Deduction( for 12 months)</TableCell>
+                      <TableCell className="font-bold text-rose-600">Monthly Deduction( for {month} month(s))</TableCell>
                       <TableCell className="text-right font-bold text-rose-600">
-                        {(((Number(totalTax.fixedTax) + Number(totalTax.varTax)) / 12).toFixed(0)).toLocaleString()}</TableCell>
+                        {(((Number(totalTax.fixedTax) + Number(totalTax.varTax)) / (month)).toFixed(0)).toLocaleString()}</TableCell>
                      </TableRow>
               </TableBody>
             </Table>
-            <h1 className='text-center text-gray-400'>Information pertains to PSID eFiling </h1>
+            <h1 className='text-center text-gray-400'>Information pertains to PSID / eFiling </h1>
 
             <Table>
               {/* <TableCaption>Information pertains to PSID eFiling</TableCaption> */}
@@ -303,4 +372,4 @@ const Salary = ({taxSlab}: taxSlabProps) => {
   );
 };
 
-export default Salary;
+export default Property;
