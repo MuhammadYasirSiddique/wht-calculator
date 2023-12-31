@@ -6,13 +6,14 @@ import {
     varchar,
     timestamp,
     boolean,
+    numeric,
   } from "drizzle-orm/pg-core";
 import { drizzle } from "drizzle-orm/vercel-postgres";
 import { sql } from "@vercel/postgres";
 //import { InferModel } from "drizzle-orm";  // 'InferModel' is deprecated.ts, 
                                             //therefore use 'InferSelectModel'
 import { type InferSelectModel, type InferInsertModel } from "drizzle-orm";
-import { decimal, mysqlTable } from "drizzle-orm/mysql-core";
+
 
 export const db = drizzle(sql);
 
@@ -51,7 +52,7 @@ export const taxslabproperty = pgTable("taxslabproperty", {
   min: integer("min").notNull(),
   max: integer("max").notNull(),
   fixtax: integer("fixtax").notNull(),
-  taxrate: decimal("taxrate").notNull(),
+  taxrate: numeric("taxrate").notNull(),
 //   status: text("status").notNull(),
 });
   
