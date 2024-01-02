@@ -53,7 +53,7 @@ const taxCodeProperty = [
 const Property = ({taxSlabProperty}: taxSlabProps) => {
   const [loading, setLoading] = useState(true); // Set loading to true initially
   const [month, setMonth] = useState<number>(0);
-    const [rent, setRent] = useState<number>(0);
+  const [rent, setRent] = useState<number>(0);
   const [taxYear, setTaxYear] = useState<number>(0);
   const [regStatus, setRegStatus] = useState<string>("");
   const [filingStatus, setFilingStatus] = useState<string>("");
@@ -64,6 +64,11 @@ const Property = ({taxSlabProperty}: taxSlabProps) => {
   const [totalTax, setTotalTax] = useState<{fixedTax: number, varTax: number}>({fixedTax: 0, varTax: 0});
   const [taxCode, setTaxCode] = useState<{id?: number, status?: string, section?: string, nature?: string ,code?: string}>({});
   
+  const [dmonth, setDmonth] = useState<number>(0);
+  const [drate, setDrate] = useState<number | undefined>(0);
+
+
+
         const taxCalc = (rent: number, month: number, taxYear: number, status: string) => {
               let annualRent = rent * month;
               let result: {id?: number, min?: number, max?: number, 
@@ -112,6 +117,7 @@ const Property = ({taxSlabProperty}: taxSlabProps) => {
                 
               }
               setResult(result);
+              setDrate(result.taxrate)
               // console.log(result.regStatus)
               
               // console.log(result.taxrate)
@@ -125,20 +131,17 @@ const Property = ({taxSlabProperty}: taxSlabProps) => {
               setTaxCode(taxCode)
 
               if(filingStatus === "nonfiler"){
-                console.log("Tax payer is non filer")
-                tax = {fixedTax: ((result.fixTax || 0 )* 2),
-              
+                  tax = {fixedTax: ((result.fixTax || 0 )* 2),
                   varTax: parseInt((((annualRent - (result.min || 0)) * (result.taxrate || 0))*2).toFixed(0))
                   };
-                
                   setTotalTax(tax)
-                  console.log(tax)
-              }
-              else {
-
-                tax = {fixedTax: result.fixTax || 0,
                   
-                  varTax: parseInt(((annualRent - (result.min || 0)) * (result.taxrate || 0)).toFixed(0))
+                  // console.log(tax)
+              }
+              if(filingStatus === "filer"){
+              
+                tax = {fixedTax: result.fixTax || 0,
+                varTax: parseInt(((annualRent - (result.min || 0)) * (result.taxrate || 0)).toFixed(0))
                 };
                 setTotalTax(tax)
               }
@@ -147,6 +150,7 @@ const Property = ({taxSlabProperty}: taxSlabProps) => {
               
               // console.log(taxCode.status, taxCode.code)
 
+              setDmonth(month)
         };
 
   const handleClick = async (salary: number, month: number, taxYear: number, regStatus: string) => {
@@ -336,7 +340,7 @@ const Property = ({taxSlabProperty}: taxSlabProps) => {
                      </TableRow>
                      <TableRow>
                       <TableCell className="font-medium">Tax Rate:</TableCell>
-                      <TableCell className="text-right">{((result.taxrate || 0) * 100).toLocaleString()}%</TableCell>
+                      <TableCell className="text-right">{((drate || 0) * 100).toLocaleString()}%</TableCell>
                      </TableRow>
                      <TableRow>
                       <TableCell className="font-medium">Fixed Tax</TableCell>
@@ -351,9 +355,9 @@ const Property = ({taxSlabProperty}: taxSlabProps) => {
                       <TableCell className="text-right font-bold">{(Number(totalTax.fixedTax) + Number(totalTax.varTax)).toLocaleString()}</TableCell>
                      </TableRow>
                      <TableRow>
-                      <TableCell className="font-bold text-rose-600">Monthly Deduction( for {month} month(s))</TableCell>
+                      <TableCell className="font-bold text-rose-600">Monthly Deduction( for {dmonth} month(s))</TableCell>
                       <TableCell className="text-right font-bold text-rose-600">
-                        {(((Number(totalTax.fixedTax) + Number(totalTax.varTax)) / (month)).toFixed(0)).toLocaleString()}</TableCell>
+                        {(((Number(totalTax.fixedTax) + Number(totalTax.varTax)) / (dmonth)).toFixed(0)).toLocaleString()}</TableCell>
                      </TableRow>
               </TableBody>
             </Table>
