@@ -94,6 +94,7 @@ const Salary = ({taxSlab}: taxSlabProps) => {
       }
 
     }
+    // console.log("filteredSlabs", filteredSlabs, result)
     setResult(result);
     // console.log(result.fixTax)
 

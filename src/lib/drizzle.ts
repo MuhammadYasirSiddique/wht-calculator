@@ -53,7 +53,7 @@ export const taxslabproperty = pgTable("taxslabproperty", {
   max: integer("max").notNull(),
   fixtax: integer("fixtax").notNull(),
   taxrate: numeric("taxrate").notNull(),
-//   status: text("status").notNull(),
+  status: varchar("status").notNull(),
 });
   
 export type TaxSlabProperty = InferSelectModel<typeof taxslabproperty>;

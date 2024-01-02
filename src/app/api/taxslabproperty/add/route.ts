@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { taxslab, TaxSlab, InsertTaxSlab, db, taxslabproperty, TaxSlabProperty } from "@/lib/drizzle";
 import { sql } from '@vercel/postgres';
+import { eq } from 'drizzle-orm';
 
 
 const API_KEY = process.env.TAX_SLAB_ADD_SECRET_KEY;
@@ -28,7 +29,8 @@ export async function POST(request: NextRequest) {
             min: req.min,
             max: req.max,
             fixtax: req.fixtax,
-            taxrate: req.taxrate
+            taxrate: req.taxrate,
+            status: req.status
          })
         .returning()
         .execute();
@@ -49,3 +51,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ message: 'Authentication failed or ' + (error as { message: string }).message });
     }
 }
+
+
+
+

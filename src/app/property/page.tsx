@@ -9,6 +9,7 @@ interface TaxSlabProperty {
   max: number;
   fixTax: number;
   taxRate: number;
+  regStatus: string;
   status?: string | null; // Add status prop with optional type
 
 }
@@ -16,7 +17,7 @@ interface TaxSlabProperty {
 const getTaxSlabProperty = async() =>{
    
 try {
-    const res = await fetch("https://wht-calculator.vercel.app/api/taxslabproperty", {
+    const res = await fetch("http://127.0.0.1:3000/api/taxslabproperty", {
         method : "GET",
         cache: "no-store",
         headers: {
@@ -40,18 +41,16 @@ try {
 const Home =async() =>{
 
     const res = await getTaxSlabProperty();
+
     if (!res) {
-        
-        
         return(
-            
             <NoInternet />
         )
     };
     const taxSlab = res.data
 
-    // console.log(res.data)
-    // console.log((taxSlab.data).filter((slab: any) => slab.mid === 3))
+    console.log(res.data)
+    // console.log((taxSlab.data).filter((slab: any) => slab.mid === 5))
 
 return(
     <div>

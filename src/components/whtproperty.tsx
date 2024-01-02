@@ -35,7 +35,7 @@ interface TaxSlabProperty {
     max: number;
     fixtax: number;
     taxrate: number;
-    status?: string | null; // Add status prop with optional type
+    status: string ; 
 
   }
   
@@ -60,79 +60,97 @@ const Property = ({taxSlabProperty}: taxSlabProps) => {
 
   const [annualRent, setAnnualRent] = useState<number>(0);
   const [result, setResult] = useState<{ id?: number, min?: number, max?: number, 
-        fixTax?: number; taxrate?: number }>({});
+        fixTax?: number; taxrate?: number, taxyear?: number, regStatus?: string }>({});
   const [totalTax, setTotalTax] = useState<{fixedTax: number, varTax: number}>({fixedTax: 0, varTax: 0});
   const [taxCode, setTaxCode] = useState<{id?: number, status?: string, section?: string, nature?: string ,code?: string}>({});
   
-  const taxCalc = (rent: number, month: number, taxYear: number) => {
-    let annualRent = rent * month;
-    let result: {id?: number, min?: number, max?: number, 
-                fixTax?: number; taxrate?: number, taxyear?: number } = {};
-    let tax : {fixedTax: number; varTax: number};
-    let taxCode: {id?: number, status?: string, section: string, nature?: string ,code?: string} = {
-      section: ''
-    };
+        const taxCalc = (rent: number, month: number, taxYear: number, status: string) => {
+              let annualRent = rent * month;
+              let result: {id?: number, min?: number, max?: number, 
+                          fixTax?: number; taxrate?: number, taxyear?: number, regStatus?: string } = {};
+              let tax : {fixedTax: number; varTax: number};
+              let taxCode: {id?: number, status?: string, section: string, nature?: string ,code?: string} = {
+                section: ''
+              };
 
-    
+              
 
-    if(annualRent > 999999999){
-      toast.error('Rent Anount is out of range. Value cannot be greater than 999,999,999');
-      return;
-    }
-     
-
-    
-    const filteredSlabs: TaxSlabProperty[] = Object.values(taxSlabProperty).filter((slab) => slab.taxyear === Number(taxYear));
-        
-    for (const slab of filteredSlabs) {
-
-      if (annualRent >= slab.min && annualRent <= slab.max && Number(taxYear) === slab.taxyear) {
-        result = {id: slab.mid, min: slab.min, max: slab.max, 
-                  fixTax: slab.fixtax, taxrate: slab.taxrate, taxyear: slab.taxyear};
+              if(annualRent > 999999999){
+                toast.error('Rent Anount is out of range. Value cannot be greater than 999,999,999');
+                return;
+              }
+              
+              // const filteredSlabs: TaxSlabProperty[] = Object
+              // .values(taxSlabProperty)
+              // .filter((slab) => {
+              //     console.log('slab.taxyear:', slab.taxyear, typeof slab.taxyear);
+              //     console.log('taxYear:', taxYear, typeof taxYear);
+              //     console.log('slab.regStatus:', slab.regStatus, typeof slab.regStatus);
+              //     console.log('regStatus:', regStatus, typeof regStatus);
           
-        break;
-      }
+              //     return slab.taxyear === Number(taxYear) })
+              // //     && slab.regStatus === regStatus;
+              // // });
+              
+              const filteredSlabs: TaxSlabProperty[] = Object
+                                  .values(taxSlabProperty)
+                                  .filter((slab) => 
+                                  slab.taxyear === Number(taxYear)
+                                  && slab.status === regStatus
+                                  );
+              // console.log(regStatus, " from taxCalc")
+              console.log("Filtered Slab ", filteredSlabs)
+                  
+              for (const slab of filteredSlabs) {
 
-    }
-    setResult(result);
-    
-    // console.log(result.taxrate)
+                if (annualRent >= slab.min && annualRent <= slab.max && Number(taxYear) === slab.taxyear ) {
+                  result = {id: slab.mid, min: slab.min, max: slab.max, 
+                            fixTax: slab.fixtax, taxrate: slab.taxrate, taxyear: slab.taxyear, regStatus: slab.status};
+                    
+                  break;
+                }
+                
+              }
+              setResult(result);
+              // console.log(result.regStatus)
+              
+              // console.log(result.taxrate)
 
-    for(const code of taxCodeProperty){
-      
-        taxCode = {id: code.id, section: code.section, nature: code.nature, code: code.code,};
-        break;
-      
-    }
-    setTaxCode(taxCode)
+              for(const code of taxCodeProperty){
+                
+                  taxCode = {id: code.id, section: code.section, nature: code.nature, code: code.code,};
+                  break;
+                
+              }
+              setTaxCode(taxCode)
 
-    if(filingStatus === "nonfiler"){
-      console.log("Tax payer is non filer")
-      tax = {fixedTax: ((result.fixTax || 0 )* 2),
-    
-        varTax: parseInt((((annualRent - (result.min || 0)) * (result.taxrate || 0))*2).toFixed(0))
+              if(filingStatus === "nonfiler"){
+                console.log("Tax payer is non filer")
+                tax = {fixedTax: ((result.fixTax || 0 )* 2),
+              
+                  varTax: parseInt((((annualRent - (result.min || 0)) * (result.taxrate || 0))*2).toFixed(0))
+                  };
+                
+                  setTotalTax(tax)
+                  console.log(tax)
+              }
+              else {
+
+                tax = {fixedTax: result.fixTax || 0,
+                  
+                  varTax: parseInt(((annualRent - (result.min || 0)) * (result.taxrate || 0)).toFixed(0))
+                };
+                setTotalTax(tax)
+              }
+              
+              setAnnualRent(annualRent);
+              
+              // console.log(taxCode.status, taxCode.code)
+
         };
-      
-        setTotalTax(tax)
-        console.log(tax)
-    }
-    else {
 
-      tax = {fixedTax: result.fixTax || 0,
-        
-        varTax: parseInt(((annualRent - (result.min || 0)) * (result.taxrate || 0)).toFixed(0))
-      };
-      setTotalTax(tax)
-    }
-    
-    setAnnualRent(annualRent);
-    
-    // console.log(taxCode.status, taxCode.code)
-
-  };
-
-  const handleClick = async (salary: number, month: number, taxYear: number) => {
-
+  const handleClick = async (salary: number, month: number, taxYear: number, regStatus: string) => {
+    // console.log(regStatus, " from handleClick")
     if (salary <= 0 ){
       
       toast.error("Please enter rent payment greater than ZERO", {
@@ -175,11 +193,11 @@ const Property = ({taxSlabProperty}: taxSlabProps) => {
 
     await new Promise((resolve) => setTimeout(resolve)); // Simulate an asynchronous operation
     // Call the taxCalc function
-    taxCalc(salary, month, taxYear);
+    taxCalc(salary, month, taxYear, regStatus);
     setLoading(false); // Set loading to false when the calculation is complete
 
  
-    taxCalc(salary, month, taxYear);
+    // taxCalc(salary, month, taxYear, regStatus);
   };
   React.useEffect(() => {
     // Check if taxSlab data is available
@@ -271,8 +289,8 @@ const Property = ({taxSlabProperty}: taxSlabProps) => {
                         <SelectValue placeholder="Reg: Status"  />
                     </SelectTrigger>
                     <SelectContent > 
-                        <SelectItem value="ind">Individual / AOP</SelectItem>
-                        <SelectItem value="com">Company</SelectItem>
+                        <SelectItem value="Ind">Individual / AOP</SelectItem>
+                        <SelectItem value="Com">Company</SelectItem>
                     </SelectContent>
                 </Select>
             </div>
@@ -293,7 +311,7 @@ const Property = ({taxSlabProperty}: taxSlabProps) => {
         </div>
         <div>
             <Button className='mt-2 w-[200px] md:w-[250px] shadow-xl'
-                onClick={() => handleClick(rent, month, taxYear)}
+                onClick={() => handleClick(rent, month, Number(taxYear), regStatus)}
                 >Calculate</Button>
         </div>      
         
