@@ -135,7 +135,7 @@ const Property = ({taxSlabProperty}: taxSlabProps) => {
                   varTax: parseInt((((annualRent - (result.min || 0)) * (result.taxrate || 0))*2).toFixed(0))
                   };
                   setTotalTax(tax)
-                  
+                  setDrate(((result.taxrate || 0) * 2))
                   // console.log(tax)
               }
               if(filingStatus === "filer"){
@@ -144,6 +144,7 @@ const Property = ({taxSlabProperty}: taxSlabProps) => {
                 varTax: parseInt(((annualRent - (result.min || 0)) * (result.taxrate || 0)).toFixed(0))
                 };
                 setTotalTax(tax)
+                
               }
               
               setAnnualRent(annualRent);
