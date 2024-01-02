@@ -94,9 +94,9 @@ const Salary = ({taxSlab}: taxSlabProps) => {
       }
 
     }
-    // console.log("filteredSlabs", filteredSlabs, result)
+    console.log("filteredSlabs", filteredSlabs, result)
     setResult(result);
-    // console.log(result.fixTax)
+    // console.log(result.taxrate)
 
     for(const code of taxCodeSalary){
       if(selectedEmploymentStatus === code.status){

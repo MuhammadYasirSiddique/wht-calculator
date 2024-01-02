@@ -24,7 +24,7 @@ export const taxslab = pgTable("taxslab", {
   min: integer("min").notNull(),
   max: integer("max").notNull(),
   fixtax: integer("fixtax").notNull(),
-  taxrate: integer("taxrate").notNull(),
+  taxrate: numeric("taxrate").notNull(),
 //   status: text("status").notNull(),
 });
 
