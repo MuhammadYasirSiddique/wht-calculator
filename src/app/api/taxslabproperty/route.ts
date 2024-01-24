@@ -12,6 +12,7 @@ export async function GET(request: NextRequest) {
     //    console.log(result)
         
         const data = result
+        // console.log(data)
         return NextResponse.json({  data});
     
 

@@ -85,25 +85,14 @@ const Property = ({taxSlabProperty}: taxSlabProps) => {
                 return;
               }
               
-              // const filteredSlabs: TaxSlabProperty[] = Object
-              // .values(taxSlabProperty)
-              // .filter((slab) => {
-              //     console.log('slab.taxyear:', slab.taxyear, typeof slab.taxyear);
-              //     console.log('taxYear:', taxYear, typeof taxYear);
-              //     console.log('slab.regStatus:', slab.regStatus, typeof slab.regStatus);
-              //     console.log('regStatus:', regStatus, typeof regStatus);
-          
-              //     return slab.taxyear === Number(taxYear) })
-              // //     && slab.regStatus === regStatus;
-              // // });
-              
+              console.log(taxYear, " ")
               const filteredSlabs: TaxSlabProperty[] = Object
                                   .values(taxSlabProperty)
                                   .filter((slab) => 
                                   slab.taxyear === Number(taxYear)
                                   && slab.status === regStatus
                                   );
-              // console.log(regStatus, " from taxCalc")
+              
               console.log("Filtered Slab ", filteredSlabs)
                   
               for (const slab of filteredSlabs) {

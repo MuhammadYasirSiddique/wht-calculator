@@ -48,6 +48,7 @@ const taxCodeSalary = [
   { id: 1, status: 'Federal Govt', section: '149/1', nature: 'Adjustable' , code: '64020001' },
   { id: 2, status: 'Provincial Govt', section: '149/2', nature: 'Adjustable', code: '64020002'  },
   { id: 3, status : 'Other', section: '149/3',nature: 'Adjustable', code: '64020004' },
+  { id: 4, status : 'Corporate', section: '149/4',nature: 'Adjustable', code: '64020003' },
 ]
 
 
@@ -190,6 +191,7 @@ const Salary = ({taxSlab}: taxSlabProps) => {
               <SelectItem value="Federal Govt">Federal Govt</SelectItem>
               <SelectItem value="Provincial Govt">Provincial Govt</SelectItem>
               <SelectItem value="Other">Other</SelectItem>
+              <SelectItem value="Corporate">Corporate</SelectItem>
             </SelectContent>
           </Select>
 
