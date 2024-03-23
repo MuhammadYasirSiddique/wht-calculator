@@ -83,7 +83,10 @@ const Salary = ({taxSlab}: taxSlabProps) => {
      
 
     
-    const filteredSlabs: TaxSlab[] = Object.values(taxSlab).filter((slab) => slab.taxyear === Number(taxYear));
+    const filteredSlabs: TaxSlab[] = Object
+                                    .values(taxSlab)
+                                    .filter((slab) => 
+                                    slab.taxyear === Number(taxYear));
         
     for (const slab of filteredSlabs) {
 

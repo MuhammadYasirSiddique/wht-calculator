@@ -30,7 +30,7 @@ try {
         throw new Error("Failed to fetch the data")
     };
     const result = await res.json()
-    console.log(result)
+    // console.log(result)
     return result
 
 } catch (error) {

@@ -51,6 +51,7 @@ const taxCodeProperty = [
 
 
 const Property = ({taxSlabProperty}: taxSlabProps) => {
+  // console.log(taxSlabProperty, " from Property")
   const [loading, setLoading] = useState(true); // Set loading to true initially
   const [month, setMonth] = useState<number>(0);
   const [rent, setRent] = useState<number>(0);
@@ -85,7 +86,7 @@ const Property = ({taxSlabProperty}: taxSlabProps) => {
                 return;
               }
               
-              console.log(taxYear, " ")
+              // console.log(taxYear, " ")
               const filteredSlabs: TaxSlabProperty[] = Object
                                   .values(taxSlabProperty)
                                   .filter((slab) => 
@@ -93,7 +94,7 @@ const Property = ({taxSlabProperty}: taxSlabProps) => {
                                   && slab.status === regStatus
                                   );
               
-              console.log("Filtered Slab ", filteredSlabs)
+              console.log(`Filtered Slab for ${taxYear} and ${status} `, filteredSlabs)
                   
               for (const slab of filteredSlabs) {
 
