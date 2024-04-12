@@ -47,7 +47,7 @@ interface taxSlabProps {
 }
 
 const Business = ({ TaxSlabBusiness }: taxSlabProps) => {
-  // console.log(TaxSlabBusiness, " from Property")
+  // console.log(TaxSlabBusiness);
   // const [loading, setLoading] = useState(true); // Set loading to true initially
   const [amount, setAmount] = useState<number>(0);
   const [taxYear, setTaxYear] = useState<number>(0);
