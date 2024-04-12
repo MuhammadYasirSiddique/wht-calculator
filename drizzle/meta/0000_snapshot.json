@@ -1,0 +1,97 @@
+{
+  "id": "22321191-a002-4838-b6c9-77ae10b85d13",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "5",
+  "dialect": "pg",
+  "tables": {
+    "taxslabbusiness": {
+      "name": "taxslabbusiness",
+      "schema": "",
+      "columns": {
+        "mid": {
+          "name": "mid",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "taxyear": {
+          "name": "taxyear",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sid": {
+          "name": "sid",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "paymentsection": {
+          "name": "paymentsection",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "paymenttype": {
+          "name": "paymenttype",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "regstatus": {
+          "name": "regstatus",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "residency": {
+          "name": "residency",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "taxrate": {
+          "name": "taxrate",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "psidsection": {
+          "name": "psidsection",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "efilingcode": {
+          "name": "efilingcode",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "taxnature": {
+          "name": "taxnature",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
