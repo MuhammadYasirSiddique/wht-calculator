@@ -1,5 +1,5 @@
 "use client";
-
+import CustomScript from "@/components/CustomScript";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
@@ -227,7 +227,7 @@ const Business = ({ TaxSlabBusiness }: taxSlabProps) => {
           Witholding tax on Payment of Goods and Services
         </h1>
       </div>
-
+      <CustomScript />
       {/* <div>{loading && <Loading />}</div> */}
 
       <div>
