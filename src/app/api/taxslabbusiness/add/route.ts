@@ -64,7 +64,6 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { db, taxslabbusiness } from "@/lib/drizzle";
-import * as excel from "exceljs";
 
 const API_KEY = process.env.TAX_SLAB_ADD_SECRET_KEY;
 
@@ -76,33 +75,31 @@ export async function POST(request: NextRequest) {
       throw new Error("Invalid API key");
     }
 
-    const buffer = await request.body.arrayBuffer();
-    const workbook = new excel.Workbook();
-    await workbook.xlsx.load(buffer);
+    const req = await request.json();
 
-    const worksheet = workbook.worksheets[0]; // Assuming data is in the first sheet
-
-    const rows = worksheet.getRows(); // Get all rows
+    if (!Array.isArray(req)) {
+      throw new Error("Request body should be an array of records");
+    }
 
     const insertedRecords = [];
 
-    for (const row of rows) {
+    for (const record of req) {
       const res = await db
         .insert(taxslabbusiness)
         .values({
-          mid: row.getCell(1).value,
-          taxyear: row.getCell(2).value,
-          sid: row.getCell(3).value,
-          paymentsection: row.getCell(4).value,
-          paymenttype: row.getCell(5).value,
-          regstatus: row.getCell(6).value,
-          residency: row.getCell(7).value,
-          commodity: row.getCell(8).value,
-          taxrate: row.getCell(9).value,
-          psidsection: row.getCell(10).value,
-          efilingcode: row.getCell(11).value,
-          taxnature: row.getCell(12).value,
-          //   status: row.getCell(13).value,
+          mid: record.mid,
+          taxyear: record.taxyear,
+          sid: record.sid,
+          paymentsection: record.paymentsection,
+          paymenttype: record.paymenttype,
+          regstatus: record.regstatus,
+          residency: record.residency,
+          commodity: record.commodity,
+          taxrate: record.taxrate,
+          psidsection: record.psidsection,
+          efilingcode: record.efilingcode,
+          taxnature: record.taxnature,
+          //   status: record.status,
         })
         .returning()
         .execute();

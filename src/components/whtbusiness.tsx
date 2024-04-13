@@ -30,14 +30,14 @@ interface TaxSlabBusiness {
   mid: number;
   taxyear: number;
   sid: number;
-  paymentsection: number;
+  paymentsection: string;
   paymenttype: string;
   regstatus: string;
   residency: string;
   commodity: string;
   taxrate: number;
   psidsection: string;
-  efilingcode: number;
+  efilingcode: string;
   taxnature: string;
   status: string;
 }
@@ -50,6 +50,7 @@ const Business = ({ TaxSlabBusiness }: taxSlabProps) => {
   // console.log(TaxSlabBusiness);
   // const [loading, setLoading] = useState(true); // Set loading to true initially
   const [amount, setAmount] = useState<number>(0);
+  const [payment, setPayment] = useState<number>(0);
   const [taxYear, setTaxYear] = useState<number>(0);
   const [paymentSection, setPaymentSection] = useState<string>("");
   const [paymentType, setPaymentType] = useState<string>("");
@@ -58,19 +59,10 @@ const Business = ({ TaxSlabBusiness }: taxSlabProps) => {
   const [residency, setResidency] = useState<string>("");
   const [commodity, setCommodity] = useState<string>("");
 
-  const [result, setResult] = useState<{
-    id?: number;
-    taxrate?: number;
-    taxyear?: number;
-    regStatus?: string;
-  }>({});
-  const [taxCode, setTaxCode] = useState<{
-    id?: number;
-    status?: string;
-    section?: string;
-    nature?: string;
-    code?: string;
-  }>({});
+  const [renderTaxRate, setRenderTaxRate] = useState<number>(0);
+  const [renderPSIDsection, setRenderPSIDsawection] = useState<string>("");
+  const [renderPaymentNature, setRenderPaymentNature] = useState<string>("");
+  const [renderEfilingCode, setRenderEfilingCode] = useState<string>("");
 
   const taxCalc = (
     amount: number,
@@ -80,9 +72,70 @@ const Business = ({ TaxSlabBusiness }: taxSlabProps) => {
     filingStatus: string,
     paymentType: string,
     commodity: string
-  ) => {};
+  ) => {
+    setPayment(amount);
+    let result: {
+      mid: number;
+      taxyear: number;
+      taxrate: number;
+      psidsection: string;
+      efilingcode: string;
+      taxnature: string;
+    } = {
+      mid: 0,
+      taxyear: 0,
+      taxrate: 0,
+      psidsection: "",
+      efilingcode: "",
+      taxnature: "",
+    };
 
-  // console.log(taxCode.status, taxCode.code)
+    if (amount > 999999999) {
+      toast.error(
+        "Payment is out of range. Value cannot be greater than 999,999,999"
+      );
+      return;
+    }
+
+    const filteredSlabs: TaxSlabBusiness[] = Object.values(
+      TaxSlabBusiness
+    ).filter((slab) => {
+      // console.log("slab.paymentsection:", slab.paymentsection);
+      return (
+        slab.taxyear === Number(taxYear) &&
+        slab.paymentsection === paymentSection &&
+        slab.regstatus === regStatus &&
+        slab.paymenttype === paymentType &&
+        slab.commodity === commodity
+      );
+    });
+
+    console.log(JSON.parse(JSON.stringify(filteredSlabs)));
+
+    for (const slab of filteredSlabs) {
+      result = {
+        mid: slab.mid,
+        taxyear: slab.taxyear,
+        taxrate: slab.taxrate,
+        psidsection: slab.psidsection,
+        efilingcode: slab.efilingcode,
+        taxnature: slab.taxnature,
+      };
+
+      break;
+    }
+
+    // console.log(result.psidsection);
+    if (filingStatus === "nonfiler") {
+      setRenderTaxRate(result.taxrate * 2);
+    } else {
+      setRenderTaxRate(result.taxrate);
+    }
+
+    setRenderPSIDsawection(result.psidsection);
+    setRenderPaymentNature(result.taxnature);
+    setRenderEfilingCode(result.efilingcode);
+  };
 
   const handleClick = async (
     amount: number,
@@ -94,7 +147,7 @@ const Business = ({ TaxSlabBusiness }: taxSlabProps) => {
     paymentType: string,
     commodity: string
   ) => {
-    // console.log(amount, " from handleClick");
+    // console.log(regStatus, " from handleClick");
 
     if (amount <= 0) {
       toast.error("Please enter Amount greater than ZERO", {
@@ -219,30 +272,6 @@ const Business = ({ TaxSlabBusiness }: taxSlabProps) => {
               </div>
             </div>
 
-            <div className="md:flex gap-2 ">
-              <div>
-                <Select onValueChange={(e: any) => setRegStatus(e)}>
-                  <SelectTrigger className=" w-[200px] md:w-[120px] my-2 shadow-xl ">
-                    <SelectValue placeholder="Reg: Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Ind">Individual / AOP</SelectItem>
-                    <SelectItem value="Com">Company</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Select onValueChange={(e: any) => setFilingStatus(e)}>
-                  <SelectTrigger className=" w-[200px] md:w-[145px] my-2 shadow-xl ">
-                    <SelectValue placeholder="Filing Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="filer">Filer</SelectItem>
-                    <SelectItem value="nonfiler">Non Filer</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
             <div className="">
               <Select onValueChange={(e: any) => setPaymentType(e)}>
                 <SelectTrigger className=" w-[200px] md:w-[275px] my-2 shadow-xl ">
@@ -262,28 +291,109 @@ const Business = ({ TaxSlabBusiness }: taxSlabProps) => {
                 </SelectTrigger>
                 {paymentType === "Goods" && (
                   <SelectContent>
-                    <SelectItem value="Others">Others</SelectItem>
+                    <SelectItem value="Other Goods">Other Goods</SelectItem>
                     <SelectItem value="Rice">Rice</SelectItem>
                     <SelectItem value="Edible Oil">Edible Oil</SelectItem>
                   </SelectContent>
                 )}
                 {paymentType === "Services" && (
                   <SelectContent>
-                    <SelectItem value="Others">Others</SelectItem>
-                    <SelectItem value="Media">
+                    <SelectItem value="Other Services">
+                      Other Services
+                    </SelectItem>
+                    <SelectItem value="Media (Print Electronic)">
                       Print & Electronic Media
                     </SelectItem>
-                    <SelectItem value="Transport">Transport Service</SelectItem>
+                    <SelectItem value="transport services">
+                      Transport Service
+                    </SelectItem>
                   </SelectContent>
                 )}
                 {paymentType === "Contract" && (
                   <SelectContent>
-                    <SelectItem value="Sportsperson">Sports Person</SelectItem>
-                    <SelectItem value="Other">Other</SelectItem>
+                    <SelectItem value="Sports Person">Sports Person</SelectItem>
+                    <SelectItem value="Other Contract">
+                      Other Contract
+                    </SelectItem>
                   </SelectContent>
                 )}
               </Select>
             </div>
+
+            <div className="md:flex gap-2 ">
+              <div>
+                {paymentType === "" && (
+                  <Select>
+                    <SelectTrigger className=" w-[200px] md:w-[120px] my-2 shadow-xl ">
+                      <SelectValue placeholder="Reg: Status" />
+                    </SelectTrigger>
+                  </Select>
+                )}
+                {paymentType === "Goods" && (
+                  <Select onValueChange={(e: any) => setRegStatus(e)}>
+                    <SelectTrigger className=" w-[200px] md:w-[120px] my-2 shadow-xl ">
+                      <SelectValue placeholder="Reg: Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Oth">Individual / AOP</SelectItem>
+                      <SelectItem value="Com">Company</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+                {paymentType === "Services" && (
+                  <Select onValueChange={(e: any) => setRegStatus(e)}>
+                    <SelectTrigger className=" w-[200px] md:w-[120px] my-2 shadow-xl ">
+                      <SelectValue placeholder="Reg: Status" />
+                    </SelectTrigger>
+                    {commodity === "Other Services" && (
+                      <SelectContent>
+                        <SelectItem value="Oth">Individual / AOP</SelectItem>
+                        <SelectItem value="Com">Company</SelectItem>
+                      </SelectContent>
+                    )}
+                    {commodity !== "Other Services" && (
+                      <SelectContent>
+                        <SelectItem value="Com/Ind">
+                          Individual / AOP
+                        </SelectItem>
+                        <SelectItem value="Com/Ind">Company</SelectItem>
+                      </SelectContent>
+                    )}
+                  </Select>
+                )}
+                {paymentType === "Contract" && (
+                  <Select onValueChange={(e: any) => setRegStatus(e)}>
+                    <SelectTrigger className=" w-[200px] md:w-[120px] my-2 shadow-xl ">
+                      <SelectValue placeholder="Reg: Status" />
+                    </SelectTrigger>
+                    {commodity === "Sports Person" && (
+                      <SelectContent>
+                        <SelectItem value="Ind">Individual </SelectItem>
+                        {/* <SelectItem value="Com">Company</SelectItem> */}
+                      </SelectContent>
+                    )}
+                    {commodity === "Other Contract" && (
+                      <SelectContent>
+                        <SelectItem value="Ind">Individual /AOP </SelectItem>
+                        <SelectItem value="Com">Company</SelectItem>
+                      </SelectContent>
+                    )}
+                  </Select>
+                )}
+              </div>
+              <div>
+                <Select onValueChange={(e: any) => setFilingStatus(e)}>
+                  <SelectTrigger className=" w-[200px] md:w-[145px] my-2 shadow-xl ">
+                    <SelectValue placeholder="Filing Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="filer">Filer</SelectItem>
+                    <SelectItem value="nonfiler">Non Filer</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
             <div>
               <Button
                 className="mt-2 w-[200px] md:w-[275px] shadow-xl"
@@ -326,19 +436,19 @@ const Business = ({ TaxSlabBusiness }: taxSlabProps) => {
                   <TableRow>
                     <TableCell className="font-medium">Gross Payment</TableCell>
                     <TableCell className="text-right">
-                      {amount.toLocaleString()}
+                      {payment.toLocaleString()}
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell className="font-medium">Tax Rate</TableCell>
                     <TableCell className="text-right">
-                      {/* {taxrate.toLocaleString()} */}
+                      {renderTaxRate.toLocaleString()}%
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell className="font-medium">Total Tax</TableCell>
                     <TableCell className="text-right">
-                      {/* {totalTax.varTax.toLocaleString()} */}
+                      {(payment * renderTaxRate) / 100}
                     </TableCell>
                   </TableRow>
                 </TableBody>
@@ -356,7 +466,7 @@ const Business = ({ TaxSlabBusiness }: taxSlabProps) => {
                       Payment Section(PSID)
                     </TableCell>
                     <TableCell className="text-right">
-                      {taxCode.section}
+                      {renderPSIDsection}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -364,14 +474,16 @@ const Business = ({ TaxSlabBusiness }: taxSlabProps) => {
                       Payment Nature
                     </TableCell>
                     <TableCell className="text-right">
-                      {taxCode.nature}
+                      {renderPaymentNature}
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell className="font-medium">
                       Tax Code (eFiling)
                     </TableCell>
-                    <TableCell className="text-right">{taxCode.code}</TableCell>
+                    <TableCell className="text-right">
+                      {renderEfilingCode}
+                    </TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
