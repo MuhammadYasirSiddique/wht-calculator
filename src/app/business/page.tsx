@@ -22,8 +22,8 @@ interface TaxSlabBusiness {
 const getTaxSlabBusiness = async () => {
   try {
     const res = await fetch(
-      // "https://wht-calculator.vercel.app/api/taxslabbusiness",
-      "http://localhost:3000/api/taxslabbusiness",
+      "https://wht-calculator.vercel.app/api/taxslabbusiness",
+      // "http://localhost:3000/api/taxslabbusiness",
       {
         method: "GET",
         cache: "no-store",
