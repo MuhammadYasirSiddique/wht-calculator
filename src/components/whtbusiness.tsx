@@ -2,7 +2,7 @@
 import CustomScript from "@/components/CustomScript";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as React from "react";
 import { Toaster } from "react-hot-toast";
 import { ToastContainer, toast } from "react-toastify";
@@ -25,6 +25,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Loading from "./loader";
+import Section153 from "./whtbusiness/Section153";
+import Section236A from "./whtbusiness/Section236A";
 
 interface TaxSlabBusiness {
   mid: number;
@@ -96,20 +98,20 @@ const Business = ({ TaxSlabBusiness }: taxSlabProps) => {
       );
       return;
     }
-
+    // console.log(paymentSection, "in Tax Calc");
     const filteredSlabs: TaxSlabBusiness[] = Object.values(
       TaxSlabBusiness
-    ).filter((slab) => {
-      // console.log("slab.paymentsection:", slab.paymentsection);
+    ).filter((taxslab) => {
+      console.log("slab.taxyear:", taxslab.taxyear);
       return (
-        slab.taxyear === Number(taxYear) &&
-        slab.paymentsection === paymentSection &&
-        slab.regstatus === regStatus &&
-        slab.paymenttype === paymentType &&
-        slab.commodity === commodity
+        taxslab.taxyear === Number(taxYear) &&
+        taxslab.paymentsection === paymentSection &&
+        taxslab.regstatus === regStatus &&
+        taxslab.paymenttype === paymentType &&
+        taxslab.commodity === commodity
       );
     });
-
+    // console.log("paymentsection:", paymentSection);
     console.log(JSON.parse(JSON.stringify(filteredSlabs)));
 
     for (const slab of filteredSlabs) {
@@ -162,7 +164,7 @@ const Business = ({ TaxSlabBusiness }: taxSlabProps) => {
       });
       return;
     }
-
+    // console.log(paymentSection, "Handle Click");
     if (!paymentSection) {
       toast.error("Please select the Payment Section", {
         autoClose: 2500,
@@ -227,7 +229,7 @@ const Business = ({ TaxSlabBusiness }: taxSlabProps) => {
           Witholding tax on Payment of Goods and Services
         </h1>
       </div>
-      <CustomScript />
+
       {/* <div>{loading && <Loading />}</div> */}
 
       <div>
@@ -265,133 +267,40 @@ const Business = ({ TaxSlabBusiness }: taxSlabProps) => {
                     <SelectValue placeholder="Payment Section" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="153">153</SelectItem>
-                    {/* <SelectItem value="2023">2023</SelectItem> */}
+                    <SelectItem value="153">
+                      153-Payment of Goods and Serives
+                    </SelectItem>
+                    <SelectItem value="236A">
+                      236A-Advance Tax on Sale by Auction
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
 
-            <div className="">
-              <Select onValueChange={(e: any) => setPaymentType(e)}>
-                <SelectTrigger className=" w-[200px] md:w-[275px] my-2 shadow-xl ">
-                  <SelectValue placeholder="Type of Payment" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Goods">Goods</SelectItem>
-                  <SelectItem value="Services">Services</SelectItem>
-                  <SelectItem value="Contract">Contract</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="">
-              <Select onValueChange={(e: any) => setCommodity(e)}>
-                <SelectTrigger className=" w-[200px] md:w-[275px] my-2 shadow-xl ">
-                  <SelectValue placeholder="Srvice or Commodity" />
-                </SelectTrigger>
-                {paymentType === "Goods" && (
-                  <SelectContent>
-                    <SelectItem value="Other Goods">Other Goods</SelectItem>
-                    <SelectItem value="Rice">Rice</SelectItem>
-                    <SelectItem value="Edible Oil">Edible Oil</SelectItem>
-                  </SelectContent>
-                )}
-                {paymentType === "Services" && (
-                  <SelectContent>
-                    <SelectItem value="Other Services">
-                      Other Services
-                    </SelectItem>
-                    <SelectItem value="Media (Print Electronic)">
-                      Print & Electronic Media
-                    </SelectItem>
-                    <SelectItem value="transport services">
-                      Transport Service
-                    </SelectItem>
-                  </SelectContent>
-                )}
-                {paymentType === "Contract" && (
-                  <SelectContent>
-                    <SelectItem value="Sports Person">Sports Person</SelectItem>
-                    <SelectItem value="Other Contract">
-                      Other Contract
-                    </SelectItem>
-                  </SelectContent>
-                )}
-              </Select>
-            </div>
-
-            <div className="md:flex gap-2 ">
-              <div>
-                {paymentType === "" && (
-                  <Select>
-                    <SelectTrigger className=" w-[200px] md:w-[120px] my-2 shadow-xl ">
-                      <SelectValue placeholder="Reg: Status" />
-                    </SelectTrigger>
-                  </Select>
-                )}
-                {paymentType === "Goods" && (
-                  <Select onValueChange={(e: any) => setRegStatus(e)}>
-                    <SelectTrigger className=" w-[200px] md:w-[120px] my-2 shadow-xl ">
-                      <SelectValue placeholder="Reg: Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Oth">Individual / AOP</SelectItem>
-                      <SelectItem value="Com">Company</SelectItem>
-                    </SelectContent>
-                  </Select>
-                )}
-                {paymentType === "Services" && (
-                  <Select onValueChange={(e: any) => setRegStatus(e)}>
-                    <SelectTrigger className=" w-[200px] md:w-[120px] my-2 shadow-xl ">
-                      <SelectValue placeholder="Reg: Status" />
-                    </SelectTrigger>
-                    {commodity === "Other Services" && (
-                      <SelectContent>
-                        <SelectItem value="Oth">Individual / AOP</SelectItem>
-                        <SelectItem value="Com">Company</SelectItem>
-                      </SelectContent>
-                    )}
-                    {commodity !== "Other Services" && (
-                      <SelectContent>
-                        <SelectItem value="Com/Ind">
-                          Individual / AOP
-                        </SelectItem>
-                        <SelectItem value="Com/Ind">Company</SelectItem>
-                      </SelectContent>
-                    )}
-                  </Select>
-                )}
-                {paymentType === "Contract" && (
-                  <Select onValueChange={(e: any) => setRegStatus(e)}>
-                    <SelectTrigger className=" w-[200px] md:w-[120px] my-2 shadow-xl ">
-                      <SelectValue placeholder="Reg: Status" />
-                    </SelectTrigger>
-                    {commodity === "Sports Person" && (
-                      <SelectContent>
-                        <SelectItem value="Ind">Individual </SelectItem>
-                        {/* <SelectItem value="Com">Company</SelectItem> */}
-                      </SelectContent>
-                    )}
-                    {commodity === "Other Contract" && (
-                      <SelectContent>
-                        <SelectItem value="Ind">Individual /AOP </SelectItem>
-                        <SelectItem value="Com">Company</SelectItem>
-                      </SelectContent>
-                    )}
-                  </Select>
-                )}
-              </div>
-              <div>
-                <Select onValueChange={(e: any) => setFilingStatus(e)}>
-                  <SelectTrigger className=" w-[200px] md:w-[145px] my-2 shadow-xl ">
-                    <SelectValue placeholder="Filing Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="filer">Filer</SelectItem>
-                    <SelectItem value="nonfiler">Non Filer</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+            <div>
+              {paymentSection === "153" && (
+                <Section153
+                  paymentType={paymentType}
+                  commodity={commodity}
+                  regStatus={regStatus}
+                  setPaymentType={setPaymentType}
+                  setCommodity={setCommodity}
+                  setRegStatus={setRegStatus}
+                  setFilingStatus={setFilingStatus}
+                />
+              )}
+              {paymentSection === "236A" && (
+                <Section236A
+                  paymentType={paymentType}
+                  commodity={commodity}
+                  regStatus={regStatus}
+                  setPaymentType={setPaymentType}
+                  setCommodity={setCommodity}
+                  setRegStatus={setRegStatus}
+                  setFilingStatus={setFilingStatus}
+                />
+              )}
             </div>
 
             <div>

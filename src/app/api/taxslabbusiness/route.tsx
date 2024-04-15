@@ -10,10 +10,10 @@ import { sql } from "@vercel/postgres";
 export async function GET(request: NextRequest) {
   try {
     const result = await db.select().from(taxslabbusiness).execute();
-    //    console.log(result)
+    // console.log(result);
 
     const data = result;
-    // console.log(data)
+    // console.log(data);
     return NextResponse.json({ data });
   } catch (error) {
     // console.error(error);
