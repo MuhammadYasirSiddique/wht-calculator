@@ -38,6 +38,21 @@ export default function RootLayout({
 
         {children}
 
+
+        <script
+          type="text/javascript"
+          dangerouslySetInnerHTML={{
+            __html: `
+              var atOptions = {
+                'key' : '910d27652150a343764eeb820d45c593',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+              };
+              `,
+          }}
+        />
         {/* <Script type="text/javascript">
         
           atOptions =
