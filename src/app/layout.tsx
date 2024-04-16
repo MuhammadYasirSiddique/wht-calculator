@@ -28,6 +28,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <Script
+          type="text/javascript"
+          src="//pl23081874.profitablegatecpm.com/68/94/5f/68945f18aeba4962e723b4e5f83c16e5.js"
+        ></Script>
+      </head>
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
@@ -38,8 +44,7 @@ export default function RootLayout({
 
         {children}
 
-
-        <script
+        {/* <script
           type="text/javascript"
           dangerouslySetInnerHTML={{
             __html: `
@@ -52,7 +57,7 @@ export default function RootLayout({
               };
               `,
           }}
-        />
+        /> */}
         {/* <Script type="text/javascript">
         
           atOptions =
@@ -64,11 +69,11 @@ export default function RootLayout({
             'params' : {}
           };
         </Script> */}
-        <Script
+        {/* <Script
           strategy="beforeInteractive"
           type="text/javascript"
           src="//www.topcreativeformat.com/910d27652150a343764eeb820d45c593/invoke.js"
-        ></Script>
+        ></Script> */}
 
         <Contact />
         <Footer />
