@@ -51,7 +51,7 @@ const Home = async () => {
     return <NoInternet />;
   }
   const taxSlab = res.data;
-
+  // console.log(taxSlab);
   // console.log(res.data);
   //   console.log(taxSlab.data.filter((slab: any) => slab.mid === 5));
 

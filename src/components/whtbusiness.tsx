@@ -98,7 +98,8 @@ const Business = ({ TaxSlabBusiness }: taxSlabProps) => {
       );
       return;
     }
-    // console.log(paymentSection, "in Tax Calc");
+    console.log(taxYear);
+    console.log(paymentSection, "in Tax Calc");
     const filteredSlabs: TaxSlabBusiness[] = Object.values(
       TaxSlabBusiness
     ).filter((taxslab) => {
@@ -111,6 +112,7 @@ const Business = ({ TaxSlabBusiness }: taxSlabProps) => {
         taxslab.commodity === commodity
       );
     });
+
     // console.log("paymentsection:", paymentSection);
     console.log(JSON.parse(JSON.stringify(filteredSlabs)));
 

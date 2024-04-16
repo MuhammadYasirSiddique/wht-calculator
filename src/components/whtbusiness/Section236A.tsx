@@ -61,7 +61,7 @@ const Section236: React.FC<Section236Props> = ({
               <SelectValue placeholder="Reg: Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Ind+">Individual / AOP</SelectItem>
+              <SelectItem value="Ind">Individual / AOP</SelectItem>
               <SelectItem value="Com">Company</SelectItem>
             </SelectContent>
           </Select>
