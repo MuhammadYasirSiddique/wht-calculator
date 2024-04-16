@@ -44,7 +44,7 @@ export default function RootLayout({
 
         {children}
 
-        {/* <script
+        <script
           type="text/javascript"
           dangerouslySetInnerHTML={{
             __html: `
@@ -57,7 +57,7 @@ export default function RootLayout({
               };
               `,
           }}
-        /> */}
+        />
         {/* <Script type="text/javascript">
         
           atOptions =
@@ -69,14 +69,18 @@ export default function RootLayout({
             'params' : {}
           };
         </Script> */}
-        {/* <Script
+        <Script
           strategy="beforeInteractive"
           type="text/javascript"
           src="//www.topcreativeformat.com/910d27652150a343764eeb820d45c593/invoke.js"
-        ></Script> */}
+        ></Script>
 
         <Contact />
         <Footer />
+        <Script
+          type="text/javascript"
+          src="//pl23081954.profitablegatecpm.com/1d/9f/33/1d9f330d33c5abee1c2bda6648021eac.js"
+        ></Script>
       </body>
     </html>
   );
