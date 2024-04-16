@@ -73,3 +73,13 @@ export const taxslabbusiness = pgTable("taxslabbusiness", {
 
 export type TaxSlabBusiness = InferSelectModel<typeof taxslabbusiness>;
 export type InsertTaxSlabBusiness = InferInsertModel<typeof taxslabbusiness>;
+
+export const messages = pgTable("messages", {
+  id: serial("id").primaryKey(),
+  name: varchar("name").notNull(),
+  email: varchar("email").notNull(),
+  message: varchar("message").notNull(),
+});
+
+export type Messages = InferSelectModel<typeof messages>;
+export type InsertMessages = InferInsertModel<typeof messages>;
