@@ -36,8 +36,8 @@ const TermsOfUse = () => {
             You agree to use WHT Calculator only for lawful purposes and in a
             manner consistent with all applicable laws and regulations. You may
             not use this website in any manner that could damage, disable,
-            overburden, or impair the website or interfere with any other
-            party's use and enjoyment of the website.
+            overburden, or impair the website or interfere with any other party
+            use and enjoyment of the website.
           </p>
 
           <h2 className="text-xl md:text-xl lg:text-2xl font-bold mb-4">
