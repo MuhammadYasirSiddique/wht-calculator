@@ -30,8 +30,8 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <Script
-          type="text/javascript"
-          src="//pl23081874.profitablegatecpm.com/68/94/5f/68945f18aeba4962e723b4e5f83c16e5.js"
+        // type="text/javascript"
+        // src="//pl23081874.profitablegatecpm.com/68/94/5f/68945f18aeba4962e723b4e5f83c16e5.js"
         ></Script>
       </head>
       <body
