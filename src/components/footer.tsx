@@ -6,8 +6,8 @@ const Footer = () => {
       {" "}
       <div className="bg-black h-0.5"></div>
       <div className=" lg:mt-5 lg:mb-5 mt-3 mb-3 grid grid-cols-1 md:grid-cols-3">
-        <div className="text-center">Copyright © 2023</div>{" "}
-        <div className="text-center">Design. Coding Fellow</div>
+        <div className="text-center">Copyright © 2024</div>{" "}
+        <div className="text-center">Design. Accounting Fellow</div>
         <div className="text-center">Code by. Yasir</div>
       </div>{" "}
     </div>

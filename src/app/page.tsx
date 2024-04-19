@@ -1,6 +1,8 @@
+import Agentslider from "../components/Agentslider";
 import CustomScript from "@/components/CustomScript";
+import Features from "@/components/features";
 import HomePage from "@/components/homepage";
-import UnderDevelopment from "@/components/underdevelopment";
+import Subscription from "@/components/subscription";
 import React from "react";
 
 const Home = () => {
@@ -9,6 +11,9 @@ const Home = () => {
       <CustomScript />
 
       <HomePage />
+      <Features />
+      <Agentslider />
+      <Subscription />
     </div>
   );
 };

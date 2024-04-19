@@ -28,24 +28,17 @@ const SupportCenter = () => {
             <li className="text-md md:text-lg lg:text-xl leading-relaxed mb-4">
               <strong>How can I get support?</strong> <br />
               If you need assistance or have any questions, you can contact our
-              support team via email at support@example.com or fill out the
-              contact form on the Contact Us page.
+              support team by fill out the contact form on the Contact Us page.
             </li>
           </ul>
         </div>
 
         <div>
           <h2 className="text-lg md:text-xl lg:text-2xl font-bold mb-4">
-            Contact Information:
+            Contact US:
           </h2>
           <p className="text-md md:text-lg lg:text-xl leading-relaxed mb-4">
-            Address: 123 Street, City, Country
-          </p>
-          <p className="text-md md:text-lg lg:text-xl leading-relaxed mb-4">
-            Phone: +123 456 789
-          </p>
-          <p className="text-md md:text-lg lg:text-xl leading-relaxed mb-4">
-            Email: support@example.com
+            Fill the Contact form on Contact Us page to get in touch with us.
           </p>
         </div>
       </div>
