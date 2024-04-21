@@ -6,14 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "migration:generate": "drizzle-kit generate:pg --schema=./src/lib/schema.ts",
-    "migration:run": "drizzle-kit migrate"
+    "lint": "next lint"
   },
   "dependencies": {
     "@radix-ui/react-icons": "^1.3.0",
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-slot": "^1.0.2",
+    "@vercel/analytics": "^1.2.2",
     "@vercel/postgres": "^0.5.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",

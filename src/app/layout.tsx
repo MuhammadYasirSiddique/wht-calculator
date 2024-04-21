@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/navbar";
-
+import { Analytics } from "@vercel/analytics/react";
 import { cn } from "@/lib/utils";
 import Footer from "@/components/footer";
 import Contact from "@/components/contact";
@@ -43,6 +43,7 @@ export default function RootLayout({
         <Navbar />
 
         {children}
+        <Analytics />
 
         <script
           type="text/javascript"
