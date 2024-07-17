@@ -1,7 +1,6 @@
 import NoInternet from "@/components/nointernet";
 import Property from "@/components/whtproperty";
 
-
 interface TaxSlabProperty {
   id: number;
   taxyear: number;
@@ -11,51 +10,49 @@ interface TaxSlabProperty {
   taxRate: number;
   regStatus: string;
   status?: string | null; // Add status prop with optional type
-
 }
 
-const getTaxSlabProperty = async() =>{
-   
-try {
-    const res = await fetch("https://wht-calculator.vercel.app/api/taxslabproperty", {
-        method : "GET",
+const getTaxSlabProperty = async () => {
+  try {
+    const res = await fetch(
+      "https://wht-calculator.vercel.app/api/taxslabproperty",
+      {
+        // const res = await fetch("http://127.0.0.1:3000/api/taxslabproperty", {
+        method: "GET",
         cache: "no-store",
         headers: {
-            "Content-Type": "application/json"
-        }
-    })
-    
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
     if (!res.ok) {
-        
-        throw new Error("Failed to fetch the data")
-    };
-    const result = await res.json()
+      throw new Error("Failed to fetch the data");
+    }
+    const result = await res.json();
     // console.log(result)
-    return result
+    return result;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-} catch (error) {
-    console.log(error)
-}
-}
+const Home = async () => {
+  const res = await getTaxSlabProperty();
 
-const Home =async() =>{
+  if (!res) {
+    return <NoInternet />;
+  }
+  const taxSlab = res.data;
 
-    const res = await getTaxSlabProperty();
+  // console.log(res.data)
+  // console.log((taxSlab.data).filter((slab: any) => slab.mid === 5))
 
-    if (!res) {
-        return(
-            <NoInternet />
-        )
-    };
-    const taxSlab = res.data
-
-    // console.log(res.data)
-    // console.log((taxSlab.data).filter((slab: any) => slab.mid === 5))
-
-return(
+  return (
     <div>
-        <Property taxSlabProperty = {taxSlab} />
+      <Property taxSlabProperty={taxSlab} />
     </div>
-)}
+  );
+};
 
 export default Home;
