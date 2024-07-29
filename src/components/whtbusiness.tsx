@@ -60,6 +60,7 @@ const Business = ({ TaxSlabBusiness }: taxSlabProps) => {
   const [filingStatus, setFilingStatus] = useState<string>("");
   const [residency, setResidency] = useState<string>("");
   const [commodity, setCommodity] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
 
   const [renderTaxRate, setRenderTaxRate] = useState<number>(0);
   const [renderPSIDsection, setRenderPSIDsawection] = useState<string>("");
@@ -290,6 +291,7 @@ const Business = ({ TaxSlabBusiness }: taxSlabProps) => {
                   setCommodity={setCommodity}
                   setRegStatus={setRegStatus}
                   setFilingStatus={setFilingStatus}
+                  // setMessage={setMessage}
                 />
               )}
               {paymentSection === "236A" && (
@@ -304,7 +306,7 @@ const Business = ({ TaxSlabBusiness }: taxSlabProps) => {
                 />
               )}
             </div>
-
+            {message && <div className="mt-4 text-red-500">{message}</div>}
             <div>
               <Button
                 className="mt-2 w-[200px] md:w-[275px] shadow-xl"
